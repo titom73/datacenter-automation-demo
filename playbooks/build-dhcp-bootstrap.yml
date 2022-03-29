@@ -1,0 +1,33 @@
+---
+- name: Build DHCP structured configuration
+  hosts: bootstrap_server
+  connection: local
+  gather_facts: true
+  tasks:
+    - name: Create dhcp configuration file
+      tags: [ from_eos_design, never]
+      import_role:
+          name: titom73.avd_tools.avd_dhcp_provisioner
+      vars:
+        ztp_network_summary: 10.73.254.0/24
+        ztp_pool_start: 10.73.254.200
+        ztp_pool_end: 10.73.254.210
+        ztp_lease_time: 300
+        fabric_group: 'datacenter_fabric'
+        # ztp_mac_source: system
+
+    - name: 'Generate DHCP configuration role'
+      tags: [demo, never]
+      import_role:
+        name: titom73.avd_tools.dhcp_configuration
+      vars:
+        mode: offline
+        output_dir: '{{inventory_dir}}'
+
+    - name: 'Deploy DHCP service on {{ inventory_hostname}}'
+      tags: [build]
+      import_role:
+        name: titom73.avd_tools.dhcp_configuration
+      vars:
+        mode: online
+        # output_dir: '{{inventory_dir}}'

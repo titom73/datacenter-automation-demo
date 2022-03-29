@@ -1,0 +1,83 @@
+datacenter:
+  children:
+    datacenter_fabric:
+      children:
+        spines:
+          vars:
+            type: spine
+          hosts:
+            switch01:
+              # ansible_port: 8001
+              ansible_host: 10.73.254.1
+            switch02:
+              # ansible_port: 8002
+              ansible_host: 10.73.254.2
+        l3leafs:
+          vars:
+            type: l3leaf
+          children:
+            pod01:
+              hosts:
+                switch03:
+                  # ansible_port: 8003
+                  ansible_host: 10.73.254.3
+                switch04:
+                  # ansible_port: 8004
+                  ansible_host: 10.73.254.4
+            pod02:
+              hosts:
+                switch05:
+                  # ansible_port: 8005
+                  ansible_host: 10.73.254.5
+                switch06:
+                  # ansible_port: 8006
+                  ansible_host: 10.73.254.6
+            pod03:
+              hosts:
+                switch07:
+                  # ansible_port: 8007
+                  ansible_host: 10.73.254.7
+                switch08:
+                  # ansible_port: 8008
+                  ansible_host: 10.73.254.8
+
+    fabric_services:
+      children:
+        l3leafs:
+    fabric_ports:
+      children:
+        l3leafs:
+
+# group to run arista.avd.eos_validate_state
+eos:
+  children:
+    datacenter_fabric:
+panos:
+  children:
+    firewalls:
+
+firewalls:
+  hosts:
+    firewall-pod03:
+      ansible_host: 10.73.254.101
+
+tooling:
+  hosts:
+    bootstrap_server:
+      ansible_host: 10.73.1.240
+      ansible_user: root
+      ansible_become_method: sudo
+      ansible_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          64306465643163653030343438326530643363356162343238313864353538323532643735323739
+          3330333162353361336432303638636436636161333932380a646366623062656634376137383266
+          33336331643433636262626330333737386638323236636561613863323930626637326232396439
+          3937626137366365300a346163393730616133333231653133313231626535653730373833366466
+          6530
+      ansible_become_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          32323636363963343634623634396363663732613665373535306636663266623862626436396231
+          6264386465633733663764353431363638383530353166310a386139383939386132666336653133
+          32323366653632343036323030666262396331346561646463323239353065646533363164396664
+          3739616663373365370a353338653131333934386264346164616633326437376337656164303136
+          6361

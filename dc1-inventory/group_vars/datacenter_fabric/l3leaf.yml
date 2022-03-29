@@ -1,0 +1,65 @@
+l3leaf:
+  defaults:
+    platform: "{{ lab_platform }}"
+    loopback_ipv4_pool: 192.168.1.0/24
+    loopback_ipv4_offset: 2
+    vtep_loopback_ipv4_pool: 192.168.254.0/24
+    uplink_interfaces: ['ethernet1', 'ethernet2']
+    uplink_switches: ['switch01', 'switch02']
+    uplink_ipv4_pool: 172.31.255.0/24
+    mlag_peer_ipv4_pool: '{{default_mlag_peer_ipv4_pool}}'
+    mlag_peer_l3_ipv4_pool: '{{default_mlag_peer_l3_ipv4_pool}}'
+    mlag_interfaces: '{{ default_mlag_interfaces }}'
+    virtual_router_mac_address: '{{default_virtual_router_mac_address}}'
+    bgp_defaults: '{{ bgp_default_settings }}'
+    spanning_tree_priority: 4096
+    spanning_tree_mode: mstp
+  node_groups:
+    pod01:
+      bgp_as: 65101
+      filter:
+        tenants: [ 'tenant_client' ]
+        tags: [ 'pod01', 'dc1' ]
+      nodes:
+        switch03:
+          id: 3
+          mgmt_ip: 10.73.254.3/24
+          uplink_switch_interfaces: [ethernet1, ethernet1]
+          mac_address: '50:01:00:03:00:00'
+        switch04:
+          id: 4
+          mgmt_ip: 10.73.254.4/24
+          uplink_switch_interfaces: [ethernet2, ethernet2]
+          mac_address: '50:01:00:04:00:00'
+    pod02:
+      bgp_as: 65101
+      filter:
+        tenants: [ 'tenant_server' ]
+        tags: [ 'pod02', 'dc1' ]
+      nodes:
+        switch05:
+          id: 5
+          mgmt_ip: 10.73.254.5/24
+          uplink_switch_interfaces: [ethernet1, ethernet1]
+          mac_address: '50:01:00:05:00:00'
+        switch06:
+          id: 6
+          mgmt_ip: 10.73.254.6/24
+          uplink_switch_interfaces: [ethernet2, ethernet2]
+          mac_address: '50:01:00:06:00:00'
+    pod03:
+      bgp_as: 65101
+      filter:
+        tenants: [ 'tenant_client', 'tenant_server' ]
+        tags: [ 'pod03', 'dc1', 'firewall' ]
+      nodes:
+        switch07:
+          id: 5
+          mgmt_ip: 10.73.254.7/24
+          uplink_switch_interfaces: [ethernet1, ethernet1]
+          mac_address: '50:01:00:07:00:00'
+        switch08:
+          id: 6
+          mgmt_ip: 10.73.254.8/24
+          uplink_switch_interfaces: [ethernet2, ethernet2]
+          mac_address: '50:01:00:08:00:00'

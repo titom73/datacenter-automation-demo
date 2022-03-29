@@ -1,0 +1,19 @@
+---
+- name: Build Switch configuration
+  hosts: [datacenter_fabric]
+  tags: [avd]
+  tasks:
+    - name: "generate intended variables"
+      tags: [build]
+      import_role:
+        name: arista.avd.eos_designs
+
+    - name: "generate device intended config and documentation"
+      tags: [build]
+      import_role:
+        name: arista.avd.eos_cli_config_gen
+
+    - name: "[EAPI] deploy configuration to device"
+      tags: [deploy, never]
+      import_role:
+        name: arista.avd.eos_config_deploy_eapi

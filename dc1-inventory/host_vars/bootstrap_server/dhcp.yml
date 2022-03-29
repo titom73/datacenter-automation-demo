@@ -1,0 +1,49 @@
+---
+ztp:
+  default:
+    registration: http://10.73.254.254/ztp/bootstrap
+    gateway: 10.73.254.253
+    nameservers:
+      - 10.73.1.251
+    use_system_mac: false
+  general:
+    subnets:
+      - network: 10.73.254.0
+        netmask: 255.255.255.0
+        gateway: 10.73.254.253
+        nameservers:
+          - 10.73.1.251
+        start: 10.73.254.200
+        end: 10.73.254.210
+        lease_time: 300
+  clients:
+    # Firewalls
+    - name: firewall-pod03
+      mac: '50:01:00:0b:00:00'
+      ip4: 10.73.254.101
+    # l3leaf
+    - name: switch03
+      mac: '50:01:00:03:00:00'
+      ip4: 10.73.254.3
+    - name: switch04
+      mac: '50:01:00:04:00:00'
+      ip4: 10.73.254.4
+    - name: switch05
+      mac: '50:01:00:05:00:00'
+      ip4: 10.73.254.5
+    - name: switch06
+      mac: '50:01:00:06:00:00'
+      ip4: 10.73.254.6
+    - name: switch07
+      mac: '50:01:00:07:00:00'
+      ip4: 10.73.254.7
+    - name: switch08
+      mac: '50:01:00:08:00:00'
+      ip4: 10.73.254.8
+    # spine
+    - name: switch01
+      mac: '50:01:00:01:00:00'
+      ip4: 10.73.254.1
+    - name: switch02
+      mac: '50:01:00:02:00:00'
+      ip4: 10.73.254.2

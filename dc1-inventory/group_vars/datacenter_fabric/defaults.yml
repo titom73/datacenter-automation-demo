@@ -1,0 +1,37 @@
+---
+# Disable update wait-for-convergence and update wait-for-install,
+# which is not supported in vEOS-LAB.
+# Refer to design guide
+bgp_default_settings:
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  - graceful-restart restart-time 300
+  - graceful-restart
+
+default_virtual_router_mac_address: 00:1c:73:00:dc:01
+
+default_name_servers:
+- 10.73.1.251
+
+default_mgt_gateway: 10.254.254.1
+
+# Settings for cEOS-LAB as device type for lab
+lab_platform: veos-lab
+default_mgmt_interface_vrf: MGMT
+
+#### Override for vEOS Lab Caveats ####
+
+# Default MTU Link
+default_mtu_link: 1500
+
+# Default for MLAG settings
+default_mlag_peer_ipv4_pool: 172.31.253.0/31
+default_mlag_peer_l3_ipv4_pool: 172.31.253.2/31
+default_mlag_interfaces:
+  - Ethernet3
+
+# Adjust default bfd values
+bfd_multihop:
+  interval: 1200
+  min_rx: 1200
+  multiplier: 3

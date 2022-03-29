@@ -1,0 +1,38 @@
+platform_settings:
+  - platforms: [default]
+    reload_delay:
+      mlag: 300
+      non_mlag: 330
+    feature_support:
+      queue_monitor_length_notify: false
+      interface_storm_control: false
+  - platforms: [7800R3, 7500R3, 7500R, 7280R3, 7280R2, 7280R]
+    tcam_profile: vxlan-routing
+    lag_hardware_only: false
+    reload_delay:
+      mlag: 780
+      non_mlag: 1020
+    feature_support:
+      queue_monitor_length_notify: true
+      interface_storm_control: true
+  - platforms: [ 'CEOS', 'cEOS', 'ceos', 'cEOSLab', 'cEOS-LAB' ]
+    management_interface: Management0
+    reload_delay:
+      mlag: 300
+      non_mlag: 330
+    feature_support:
+      queue_monitor_length_notify: false
+      interface_storm_control: false
+    raw_eos_cli: |
+      management api http-commands
+         vrf default
+            no shutdown
+      !
+  - platforms: [ 'VEOS', 'vEOS', 'veos', 'vEOSLab', 'VEOS-LAB', 'veos-lab' ]
+    management_interface: Management1
+    reload_delay:
+      mlag: 300
+      non_mlag: 330
+    feature_support:
+      queue_monitor_length_notify: false
+      interface_storm_control: false

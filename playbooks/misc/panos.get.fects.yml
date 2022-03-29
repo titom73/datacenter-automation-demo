@@ -1,0 +1,14 @@
+---
+- name: Collect Facts from devices
+  hosts: panos
+  connection: local
+  tasks:
+    - name: 'Get facts from {{ inventory_hostname }}'
+      paloaltonetworks.panos.panos_facts:
+        provider: '{{ provider }}'
+        # gather_subset: ['config']
+      register: PANOS_FACTS
+
+    - name: 'Display facts for {{ inventory_hostname }}'
+      debug:
+        msg: '{{ PANOS_FACTS }}'

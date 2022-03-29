@@ -1,0 +1,15 @@
+spine:
+  defaults:
+    platform: "{{ lab_platform }}"
+    bgp_as: 65001
+    loopback_ipv4_pool: 192.168.1.0/24
+    bgp_defaults: '{{bgp_default_settings}}'
+  nodes:
+    switch01:
+      id: 1
+      mgmt_ip: 10.73.254.1/24
+      mac_address: '50:01:00:01:00:00'
+    switch02:
+      id: 2
+      mgmt_ip: 10.73.254.2/24
+      mac_address: '50:01:00:02:00:00'
