@@ -341,12 +341,21 @@ vlan internal order ascending range 1006 1199
 
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
+| 111 | PR01-SERVER | - |
+| 3010 | MLAG_iBGP_TENANT_A_SERVER | LEAF_PEER_L3 |
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3 |
 | 4094 | MLAG_PEER | MLAG |
 
 ## VLANs Device Configuration
 
 ```eos
+!
+vlan 111
+   name PR01-SERVER
+!
+vlan 3010
+   name MLAG_iBGP_TENANT_A_SERVER
+   trunk group LEAF_PEER_L3
 !
 vlan 4093
    name LEAF_PEER_L3
@@ -375,22 +384,22 @@ vlan 4094
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| ethernet1 | P2P_LINK_TO_SWITCH01_ethernet2 | routed | - | 172.31.255.21/31 | default | 9000 | false | - | - |
-| ethernet2 | P2P_LINK_TO_SWITCH02_ethernet2 | routed | - | 172.31.255.23/31 | default | 9000 | false | - | - |
+| ethernet1 | P2P_LINK_TO_SWITCH01_ethernet4 | routed | - | 172.31.255.21/31 | default | 9000 | false | - | - |
+| ethernet2 | P2P_LINK_TO_SWITCH02_ethernet4 | routed | - | 172.31.255.23/31 | default | 9000 | false | - | - |
 
 ### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface ethernet1
-   description P2P_LINK_TO_SWITCH01_ethernet2
+   description P2P_LINK_TO_SWITCH01_ethernet4
    no shutdown
    mtu 9000
    no switchport
    ip address 172.31.255.21/31
 !
 interface ethernet2
-   description P2P_LINK_TO_SWITCH02_ethernet2
+   description P2P_LINK_TO_SWITCH02_ethernet4
    no shutdown
    mtu 9000
    no switchport
@@ -466,6 +475,8 @@ interface Loopback1
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
+| Vlan111 |  PR01-SERVER  |  TENANT_A_SERVER  |  -  |  false  |
+| Vlan3010 |  MLAG_PEER_L3_iBGP: vrf TENANT_A_SERVER  |  TENANT_A_SERVER  |  9000  |  false  |
 | Vlan4093 |  MLAG_PEER_L3_PEERING  |  default  |  9000  |  false  |
 | Vlan4094 |  MLAG_PEER  |  default  |  9000  |  false  |
 
@@ -473,6 +484,8 @@ interface Loopback1
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
+| Vlan111 |  TENANT_A_SERVER  |  -  |  10.1.111.254/24  |  -  |  -  |  -  |  -  |
+| Vlan3010 |  TENANT_A_SERVER  |  172.31.253.11/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  172.31.253.11/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  172.31.253.9/31  |  -  |  -  |  -  |  -  |  -  |
 
@@ -480,6 +493,19 @@ interface Loopback1
 ### VLAN Interfaces Device Configuration
 
 ```eos
+!
+interface Vlan111
+   description PR01-SERVER
+   no shutdown
+   vrf TENANT_A_SERVER
+   ip address virtual 10.1.111.254/24
+!
+interface Vlan3010
+   description MLAG_PEER_L3_iBGP: vrf TENANT_A_SERVER
+   no shutdown
+   mtu 9000
+   vrf TENANT_A_SERVER
+   ip address 172.31.253.11/31
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
@@ -505,6 +531,18 @@ interface Vlan4094
 | UDP port | 4789 |
 | EVPN MLAG Shared Router MAC | mlag-system-id |
 
+#### VLAN to VNI, Flood List and Multicast Group Mappings
+
+| VLAN | VNI | Flood List | Multicast Group |
+| ---- | --- | ---------- | --------------- |
+| 111 | 10111 | - | - |
+
+#### VRF to VNI and Multicast Group Mappings
+
+| VRF | VNI | Multicast Group |
+| ---- | --- | --------------- |
+| TENANT_A_SERVER | 11 | - |
+
 ### VXLAN Interface Device Configuration
 
 ```eos
@@ -514,6 +552,8 @@ interface Vxlan1
    vxlan source-interface Loopback1
    vxlan virtual-router encapsulation mac-address mlag-system-id
    vxlan udp-port 4789
+   vxlan vlan 111 vni 10111
+   vxlan vrf TENANT_A_SERVER vni 11
 ```
 
 # Routing
@@ -547,6 +587,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:01
 | --- | --------------- |
 | default | true |
 | MGMT | false |
+| TENANT_A_SERVER | true |
 
 ### IP Routing Device Configuration
 
@@ -554,6 +595,7 @@ ip virtual-router mac-address 00:1c:73:00:dc:01
 !
 ip routing
 no ip routing vrf MGMT
+ip routing vrf TENANT_A_SERVER
 ```
 ## IPv6 Routing
 
@@ -563,6 +605,7 @@ no ip routing vrf MGMT
 | --- | --------------- |
 | default | false |
 | MGMT | false |
+| TENANT_A_SERVER | false |
 
 ## Static Routes
 
@@ -585,7 +628,7 @@ ip route vrf MGMT 0.0.0.0/0 10.73.254.253
 
 | BGP AS | Router ID |
 | ------ | --------- |
-| 65101|  192.168.1.8 |
+| 65102|  192.168.1.8 |
 
 | BGP Tuning |
 | ---------- |
@@ -621,7 +664,7 @@ ip route vrf MGMT 0.0.0.0/0 10.73.254.253
 | Settings | Value |
 | -------- | ----- |
 | Address Family | ipv4 |
-| Remote AS | 65101 |
+| Remote AS | 65102 |
 | Next-hop self | True |
 | Send community | all |
 | Maximum routes | 12000 |
@@ -635,6 +678,7 @@ ip route vrf MGMT 0.0.0.0/0 10.73.254.253
 | 172.31.255.22 | 65001 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
 | 192.168.1.1 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
 | 192.168.1.2 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
+| 172.31.253.10 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | TENANT_A_SERVER | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - |
 
 ### Router BGP EVPN Address Family
 
@@ -644,11 +688,23 @@ ip route vrf MGMT 0.0.0.0/0 10.73.254.253
 | ---------- | -------- |
 | EVPN-OVERLAY-PEERS | True |
 
+### Router BGP VLANs
+
+| VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
+| ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
+| 111 | 192.168.1.8:10111 | 10111:10111 | - | - | learned |
+
+### Router BGP VRFs
+
+| VRF | Route-Distinguisher | Redistribute |
+| --- | ------------------- | ------------ |
+| TENANT_A_SERVER | 192.168.1.8:11 | connected<br>static |
+
 ### Router BGP Device Configuration
 
 ```eos
 !
-router bgp 65101
+router bgp 65102
    router-id 192.168.1.8
    no bgp default ipv4-unicast
    distance bgp 20 200 200
@@ -665,7 +721,7 @@ router bgp 65101
    neighbor IPv4-UNDERLAY-PEERS send-community
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor MLAG-IPv4-UNDERLAY-PEER peer group
-   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65101
+   neighbor MLAG-IPv4-UNDERLAY-PEER remote-as 65102
    neighbor MLAG-IPv4-UNDERLAY-PEER next-hop-self
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
@@ -674,10 +730,10 @@ router bgp 65101
    neighbor 172.31.253.10 description switch05
    neighbor 172.31.255.20 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.31.255.20 remote-as 65001
-   neighbor 172.31.255.20 description switch01_ethernet2
+   neighbor 172.31.255.20 description switch01_ethernet4
    neighbor 172.31.255.22 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.31.255.22 remote-as 65001
-   neighbor 172.31.255.22 description switch02_ethernet2
+   neighbor 172.31.255.22 description switch02_ethernet4
    neighbor 192.168.1.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.1.1 remote-as 65001
    neighbor 192.168.1.1 description switch01
@@ -686,6 +742,11 @@ router bgp 65101
    neighbor 192.168.1.2 description switch02
    redistribute connected route-map RM-CONN-2-BGP
    !
+   vlan 111
+      rd 192.168.1.8:10111
+      route-target both 10111:10111
+      redistribute learned
+   !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
    !
@@ -693,6 +754,15 @@ router bgp 65101
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
+   !
+   vrf TENANT_A_SERVER
+      rd 192.168.1.8:11
+      route-target import evpn 11:11
+      route-target export evpn 11:11
+      router-id 192.168.1.8
+      neighbor 172.31.253.10 peer group MLAG-IPv4-UNDERLAY-PEER
+      redistribute connected
+      redistribute static
 ```
 
 # BFD
@@ -787,12 +857,15 @@ route-map RM-MLAG-PEER-IN permit 10
 | VRF Name | IP Routing |
 | -------- | ---------- |
 | MGMT | disabled |
+| TENANT_A_SERVER | enabled |
 
 ## VRF Instances Device Configuration
 
 ```eos
 !
 vrf instance MGMT
+!
+vrf instance TENANT_A_SERVER
 ```
 
 # Quality Of Service

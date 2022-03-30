@@ -1,0 +1,5 @@
+---
+management_profile:
+  - name: 'management_base'
+    ping: true
+    ssh: true

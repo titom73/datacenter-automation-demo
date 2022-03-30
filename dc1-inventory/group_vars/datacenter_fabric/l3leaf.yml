@@ -18,7 +18,6 @@ l3leaf:
     pod01:
       bgp_as: 65101
       filter:
-        tenants: [ 'tenant_client' ]
         tags: [ 'pod01', 'dc1' ]
       nodes:
         switch03:
@@ -32,34 +31,32 @@ l3leaf:
           uplink_switch_interfaces: [ethernet2, ethernet2]
           mac_address: '50:01:00:04:00:00'
     pod02:
-      bgp_as: 65101
+      bgp_as: 65102
       filter:
-        tenants: [ 'tenant_server' ]
         tags: [ 'pod02', 'dc1' ]
       nodes:
         switch05:
           id: 5
           mgmt_ip: 10.73.254.5/24
-          uplink_switch_interfaces: [ethernet1, ethernet1]
+          uplink_switch_interfaces: [ethernet3, ethernet3]
           mac_address: '50:01:00:05:00:00'
         switch06:
           id: 6
           mgmt_ip: 10.73.254.6/24
-          uplink_switch_interfaces: [ethernet2, ethernet2]
+          uplink_switch_interfaces: [ethernet4, ethernet4]
           mac_address: '50:01:00:06:00:00'
     pod03:
-      bgp_as: 65101
+      bgp_as: 65103
       filter:
-        tenants: [ 'tenant_client', 'tenant_server' ]
         tags: [ 'pod03', 'dc1', 'firewall' ]
       nodes:
         switch07:
-          id: 5
+          id: 7
           mgmt_ip: 10.73.254.7/24
-          uplink_switch_interfaces: [ethernet1, ethernet1]
+          uplink_switch_interfaces: [ethernet5, ethernet5]
           mac_address: '50:01:00:07:00:00'
         switch08:
-          id: 6
+          id: 8
           mgmt_ip: 10.73.254.8/24
-          uplink_switch_interfaces: [ethernet2, ethernet2]
+          uplink_switch_interfaces: [ethernet6, ethernet6]
           mac_address: '50:01:00:08:00:00'

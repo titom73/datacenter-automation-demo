@@ -30,13 +30,29 @@ router_bgp:
     connected:
       route_map: RM-CONN-2-BGP
   neighbors:
+    172.31.255.9:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65101'
+      description: switch03_ethernet1
+    172.31.255.13:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65101'
+      description: switch04_ethernet1
     172.31.255.17:
       peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: switch07_ethernet1
+      remote_as: '65102'
+      description: switch05_ethernet1
     172.31.255.21:
       peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
+      remote_as: '65102'
+      description: switch06_ethernet1
+    172.31.255.25:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65103'
+      description: switch07_ethernet1
+    172.31.255.29:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65103'
       description: switch08_ethernet1
     192.168.1.5:
       peer_group: EVPN-OVERLAY-PEERS
@@ -48,12 +64,20 @@ router_bgp:
       remote_as: '65101'
     192.168.1.7:
       peer_group: EVPN-OVERLAY-PEERS
-      description: switch07
-      remote_as: '65101'
+      description: switch05
+      remote_as: '65102'
     192.168.1.8:
       peer_group: EVPN-OVERLAY-PEERS
+      description: switch06
+      remote_as: '65102'
+    192.168.1.9:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: switch07
+      remote_as: '65103'
+    192.168.1.10:
+      peer_group: EVPN-OVERLAY-PEERS
       description: switch08
-      remote_as: '65101'
+      remote_as: '65103'
   address_family_evpn:
     peer_groups:
       EVPN-OVERLAY-PEERS:
@@ -122,6 +146,42 @@ management_api_http:
   enable_https: true
 ethernet_interfaces:
   ethernet1:
+    peer: switch03
+    peer_interface: ethernet1
+    peer_type: l3leaf
+    description: P2P_LINK_TO_SWITCH03_ethernet1
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 172.31.255.8/31
+  ethernet2:
+    peer: switch04
+    peer_interface: ethernet1
+    peer_type: l3leaf
+    description: P2P_LINK_TO_SWITCH04_ethernet1
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 172.31.255.12/31
+  ethernet3:
+    peer: switch05
+    peer_interface: ethernet1
+    peer_type: l3leaf
+    description: P2P_LINK_TO_SWITCH05_ethernet1
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 172.31.255.16/31
+  ethernet4:
+    peer: switch06
+    peer_interface: ethernet1
+    peer_type: l3leaf
+    description: P2P_LINK_TO_SWITCH06_ethernet1
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 172.31.255.20/31
+  ethernet5:
     peer: switch07
     peer_interface: ethernet1
     peer_type: l3leaf
@@ -129,8 +189,8 @@ ethernet_interfaces:
     mtu: 9000
     type: routed
     shutdown: false
-    ip_address: 172.31.255.16/31
-  ethernet2:
+    ip_address: 172.31.255.24/31
+  ethernet6:
     peer: switch08
     peer_interface: ethernet1
     peer_type: l3leaf
@@ -138,7 +198,7 @@ ethernet_interfaces:
     mtu: 9000
     type: routed
     shutdown: false
-    ip_address: 172.31.255.20/31
+    ip_address: 172.31.255.28/31
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering

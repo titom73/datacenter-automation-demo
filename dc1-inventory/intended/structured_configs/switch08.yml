@@ -1,6 +1,6 @@
 router_bgp:
-  as: '65101'
-  router_id: 192.168.1.8
+  as: '65103'
+  router_id: 192.168.1.10
   bgp_defaults:
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
@@ -10,7 +10,7 @@ router_bgp:
   peer_groups:
     MLAG-IPv4-UNDERLAY-PEER:
       type: ipv4
-      remote_as: '65101'
+      remote_as: '65103'
       next_hop_self: true
       maximum_routes: 12000
       send_community: all
@@ -35,17 +35,17 @@ router_bgp:
       EVPN-OVERLAY-PEERS:
         activate: false
   neighbors:
-    172.31.253.10:
+    172.31.253.14:
       peer_group: MLAG-IPv4-UNDERLAY-PEER
       description: switch07
-    172.31.255.20:
+    172.31.255.28:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65001'
-      description: switch01_ethernet2
-    172.31.255.22:
+      description: switch01_ethernet6
+    172.31.255.30:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65001'
-      description: switch02_ethernet2
+      description: switch02_ethernet6
     192.168.1.1:
       peer_group: EVPN-OVERLAY-PEERS
       description: switch01
@@ -61,10 +61,66 @@ router_bgp:
     peer_groups:
       EVPN-OVERLAY-PEERS:
         activate: true
+  vrfs:
+    TENANT_A_CLIENT:
+      router_id: 192.168.1.10
+      rd: 192.168.1.10:10
+      route_targets:
+        import:
+          evpn:
+          - '10:10'
+        export:
+          evpn:
+          - '10:10'
+      neighbors:
+        172.31.253.14:
+          peer_group: MLAG-IPv4-UNDERLAY-PEER
+      redistribute_routes:
+      - connected
+      - static
+    TENANT_A_SERVER:
+      router_id: 192.168.1.10
+      rd: 192.168.1.10:11
+      route_targets:
+        import:
+          evpn:
+          - '11:11'
+        export:
+          evpn:
+          - '11:11'
+      neighbors:
+        172.31.253.14:
+          peer_group: MLAG-IPv4-UNDERLAY-PEER
+      redistribute_routes:
+      - connected
+      - static
+  vlans:
+    10:
+      tenant: Tenant_A
+      rd: 192.168.1.10:10010
+      route_targets:
+        both:
+        - 10010:10010
+      redistribute_routes:
+      - learned
+    11:
+      tenant: Tenant_A
+      rd: 192.168.1.10:10011
+      route_targets:
+        both:
+        - 10011:10011
+      redistribute_routes:
+      - learned
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
   gateway: 10.73.254.253
+- destination_address_prefix: 10.1.0.0/16
+  vrf: TENANT_A_CLIENT
+  gateway: 10.1.10.1
+- destination_address_prefix: 10.1.0.0/16
+  vrf: TENANT_A_SERVER
+  gateway: 10.1.11.1
 service_routing_protocols_model: multi-agent
 ip_routing: true
 daemon_terminattr:
@@ -115,6 +171,12 @@ clock:
 vrfs:
   MGMT:
     ip_routing: false
+  TENANT_A_CLIENT:
+    tenant: Tenant_A
+    ip_routing: true
+  TENANT_A_SERVER:
+    tenant: Tenant_A
+    ip_routing: true
 management_interfaces:
   Management1:
     description: oob_management
@@ -138,17 +200,65 @@ vlans:
     name: MLAG_PEER
     trunk_groups:
     - MLAG
+  10:
+    tenant: Tenant_A
+    name: PR01-FW-INTERCO-CLIENT
+  3009:
+    tenant: Tenant_A
+    name: MLAG_iBGP_TENANT_A_CLIENT
+    trunk_groups:
+    - LEAF_PEER_L3
+  11:
+    tenant: Tenant_A
+    name: PR01-FW-INTERCO-SERVER
+  3010:
+    tenant: Tenant_A
+    name: MLAG_iBGP_TENANT_A_SERVER
+    trunk_groups:
+    - LEAF_PEER_L3
 vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
     shutdown: false
-    ip_address: 172.31.253.11/31
+    ip_address: 172.31.253.15/31
     mtu: 9000
   Vlan4094:
     description: MLAG_PEER
     shutdown: false
-    ip_address: 172.31.253.9/31
+    ip_address: 172.31.253.13/31
     no_autostate: true
+    mtu: 9000
+  Vlan10:
+    tenant: Tenant_A
+    tags:
+    - pod03
+    description: PR01-FW-INTERCO-CLIENT
+    shutdown: false
+    vrf: TENANT_A_CLIENT
+    ip_address_virtual: 10.1.10.2/30
+  Vlan3009:
+    tenant: Tenant_A
+    type: underlay_peering
+    shutdown: false
+    description: 'MLAG_PEER_L3_iBGP: vrf TENANT_A_CLIENT'
+    vrf: TENANT_A_CLIENT
+    ip_address: 172.31.253.15/31
+    mtu: 9000
+  Vlan11:
+    tenant: Tenant_A
+    tags:
+    - pod03
+    description: PR01-FW-INTERCO-SERVER
+    shutdown: false
+    vrf: TENANT_A_SERVER
+    ip_address_virtual: 10.1.11.2/30
+  Vlan3010:
+    tenant: Tenant_A
+    type: underlay_peering
+    shutdown: false
+    description: 'MLAG_PEER_L3_iBGP: vrf TENANT_A_SERVER'
+    vrf: TENANT_A_SERVER
+    ip_address: 172.31.253.15/31
     mtu: 9000
 port_channel_interfaces:
   Port-Channel3:
@@ -173,26 +283,26 @@ ethernet_interfaces:
       mode: active
   ethernet1:
     peer: switch01
-    peer_interface: ethernet2
+    peer_interface: ethernet6
     peer_type: spine
-    description: P2P_LINK_TO_SWITCH01_ethernet2
+    description: P2P_LINK_TO_SWITCH01_ethernet6
     mtu: 9000
     type: routed
     shutdown: false
-    ip_address: 172.31.255.21/31
+    ip_address: 172.31.255.29/31
   ethernet2:
     peer: switch02
-    peer_interface: ethernet2
+    peer_interface: ethernet6
     peer_type: spine
-    description: P2P_LINK_TO_SWITCH02_ethernet2
+    description: P2P_LINK_TO_SWITCH02_ethernet6
     mtu: 9000
     type: routed
     shutdown: false
-    ip_address: 172.31.255.23/31
+    ip_address: 172.31.255.31/31
 mlag_configuration:
   domain_id: pod03
   local_interface: Vlan4094
-  peer_address: 172.31.253.8
+  peer_address: 172.31.253.12
   peer_link: Port-Channel3
   reload_delay_mlag: 300
   reload_delay_non_mlag: 330
@@ -214,11 +324,11 @@ loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
     shutdown: false
-    ip_address: 192.168.1.8/32
+    ip_address: 192.168.1.10/32
   Loopback1:
     description: VTEP_VXLAN_Tunnel_Source
     shutdown: false
-    ip_address: 192.168.254.7/32
+    ip_address: 192.168.254.9/32
 prefix_lists:
   PL-LOOPBACKS-EVPN-OVERLAY:
     sequence_numbers:
@@ -241,6 +351,16 @@ vxlan_interface:
       source_interface: Loopback1
       virtual_router_encapsulation_mac_address: mlag-system-id
       udp_port: 4789
+      vlans:
+        10:
+          vni: 10010
+        11:
+          vni: 10011
+      vrfs:
+        TENANT_A_CLIENT:
+          vni: 10
+        TENANT_A_SERVER:
+          vni: 11
 management_ssh:
   idle_timeout: 0
   enable: true

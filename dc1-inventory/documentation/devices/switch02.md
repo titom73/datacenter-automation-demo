@@ -306,26 +306,58 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| ethernet1 | P2P_LINK_TO_SWITCH07_ethernet2 | routed | - | 172.31.255.18/31 | default | 9000 | false | - | - |
-| ethernet2 | P2P_LINK_TO_SWITCH08_ethernet2 | routed | - | 172.31.255.22/31 | default | 9000 | false | - | - |
+| ethernet1 | P2P_LINK_TO_SWITCH03_ethernet2 | routed | - | 172.31.255.10/31 | default | 9000 | false | - | - |
+| ethernet2 | P2P_LINK_TO_SWITCH04_ethernet2 | routed | - | 172.31.255.14/31 | default | 9000 | false | - | - |
+| ethernet3 | P2P_LINK_TO_SWITCH05_ethernet2 | routed | - | 172.31.255.18/31 | default | 9000 | false | - | - |
+| ethernet4 | P2P_LINK_TO_SWITCH06_ethernet2 | routed | - | 172.31.255.22/31 | default | 9000 | false | - | - |
+| ethernet5 | P2P_LINK_TO_SWITCH07_ethernet2 | routed | - | 172.31.255.26/31 | default | 9000 | false | - | - |
+| ethernet6 | P2P_LINK_TO_SWITCH08_ethernet2 | routed | - | 172.31.255.30/31 | default | 9000 | false | - | - |
 
 ### Ethernet Interfaces Device Configuration
 
 ```eos
 !
 interface ethernet1
-   description P2P_LINK_TO_SWITCH07_ethernet2
+   description P2P_LINK_TO_SWITCH03_ethernet2
+   no shutdown
+   mtu 9000
+   no switchport
+   ip address 172.31.255.10/31
+!
+interface ethernet2
+   description P2P_LINK_TO_SWITCH04_ethernet2
+   no shutdown
+   mtu 9000
+   no switchport
+   ip address 172.31.255.14/31
+!
+interface ethernet3
+   description P2P_LINK_TO_SWITCH05_ethernet2
    no shutdown
    mtu 9000
    no switchport
    ip address 172.31.255.18/31
 !
-interface ethernet2
-   description P2P_LINK_TO_SWITCH08_ethernet2
+interface ethernet4
+   description P2P_LINK_TO_SWITCH06_ethernet2
    no shutdown
    mtu 9000
    no switchport
    ip address 172.31.255.22/31
+!
+interface ethernet5
+   description P2P_LINK_TO_SWITCH07_ethernet2
+   no shutdown
+   mtu 9000
+   no switchport
+   ip address 172.31.255.26/31
+!
+interface ethernet6
+   description P2P_LINK_TO_SWITCH08_ethernet2
+   no shutdown
+   mtu 9000
+   no switchport
+   ip address 172.31.255.30/31
 ```
 
 ## Loopback Interfaces
@@ -447,12 +479,18 @@ ip route vrf MGMT 0.0.0.0/0 10.73.254.253
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- |
-| 172.31.255.19 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
-| 172.31.255.23 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
+| 172.31.255.11 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
+| 172.31.255.15 | 65101 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
+| 172.31.255.19 | 65102 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
+| 172.31.255.23 | 65102 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
+| 172.31.255.27 | 65103 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
+| 172.31.255.31 | 65103 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - |
 | 192.168.1.5 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
 | 192.168.1.6 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 192.168.1.7 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 192.168.1.8 | 65101 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
+| 192.168.1.7 | 65102 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
+| 192.168.1.8 | 65102 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
+| 192.168.1.9 | 65103 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
+| 192.168.1.10 | 65103 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS |
 
 ### Router BGP EVPN Address Family
 
@@ -483,12 +521,24 @@ router bgp 65001
    neighbor IPv4-UNDERLAY-PEERS peer group
    neighbor IPv4-UNDERLAY-PEERS send-community
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
+   neighbor 172.31.255.11 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.11 remote-as 65101
+   neighbor 172.31.255.11 description switch03_ethernet2
+   neighbor 172.31.255.15 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.15 remote-as 65101
+   neighbor 172.31.255.15 description switch04_ethernet2
    neighbor 172.31.255.19 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.31.255.19 remote-as 65101
-   neighbor 172.31.255.19 description switch07_ethernet2
+   neighbor 172.31.255.19 remote-as 65102
+   neighbor 172.31.255.19 description switch05_ethernet2
    neighbor 172.31.255.23 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.31.255.23 remote-as 65101
-   neighbor 172.31.255.23 description switch08_ethernet2
+   neighbor 172.31.255.23 remote-as 65102
+   neighbor 172.31.255.23 description switch06_ethernet2
+   neighbor 172.31.255.27 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.27 remote-as 65103
+   neighbor 172.31.255.27 description switch07_ethernet2
+   neighbor 172.31.255.31 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.31 remote-as 65103
+   neighbor 172.31.255.31 description switch08_ethernet2
    neighbor 192.168.1.5 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.1.5 remote-as 65101
    neighbor 192.168.1.5 description switch03
@@ -496,11 +546,17 @@ router bgp 65001
    neighbor 192.168.1.6 remote-as 65101
    neighbor 192.168.1.6 description switch04
    neighbor 192.168.1.7 peer group EVPN-OVERLAY-PEERS
-   neighbor 192.168.1.7 remote-as 65101
-   neighbor 192.168.1.7 description switch07
+   neighbor 192.168.1.7 remote-as 65102
+   neighbor 192.168.1.7 description switch05
    neighbor 192.168.1.8 peer group EVPN-OVERLAY-PEERS
-   neighbor 192.168.1.8 remote-as 65101
-   neighbor 192.168.1.8 description switch08
+   neighbor 192.168.1.8 remote-as 65102
+   neighbor 192.168.1.8 description switch06
+   neighbor 192.168.1.9 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.1.9 remote-as 65103
+   neighbor 192.168.1.9 description switch07
+   neighbor 192.168.1.10 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.1.10 remote-as 65103
+   neighbor 192.168.1.10 description switch08
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn

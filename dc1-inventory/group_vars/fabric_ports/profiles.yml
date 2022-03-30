@@ -1,0 +1,10 @@
+port_profiles:
+  A-PR01-FIREWALL:
+    mode: trunk
+    vlans: "10,11"
+  A-PR01-CLIENT:
+    mode: access
+    vlans: "110"
+  A-PR01-SERVER:
+    mode: access
+    vlans: "111"

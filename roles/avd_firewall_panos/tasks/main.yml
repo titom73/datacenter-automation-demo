@@ -1,0 +1,9 @@
+---
+# tasks file for avd_firewall_panos
+- name: Generate YAML file for PANOS devices
+  tags: [build]
+  template:
+    src: 'panos-structured-config.yaml.j2'
+    dest: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+    mode: 0664
+  delegate_to: localhost

@@ -1,0 +1,17 @@
+---
+# defaults file for avd_firewall_panos
+# Root directory where to build output structure
+root_dir: '{{ inventory_dir }}'
+
+# Main output directory
+output_dir_name: 'intended'
+output_dir: '{{ root_dir }}/{{ output_dir_name }}'
+
+# Output for structured YAML files:
+structured_dir_name: 'structured_configs'
+structured_dir: '{{ output_dir }}/{{ structured_dir_name }}'
+
+# Name of group where services are defined
+fabric_services: 'fabric_services'
+fabric_ports: 'fabric_ports'
+

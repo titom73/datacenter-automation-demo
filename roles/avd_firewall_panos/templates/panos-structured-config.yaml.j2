@@ -1,0 +1,102 @@
+---
+{% if 'tenants' in hostvars[groups[fabric_services][0]] %}
+virtual_routers:
+{%     for tenant_name, tenant_data in hostvars[groups[fabric_services][0]]['tenants'].items() %}
+  - {{ tenant_name }}
+{%     endfor %}
+
+security_zones:
+{%     for tenant_name, tenant_data in hostvars[groups[fabric_services][0]]['tenants'].items() %}
+{%         if 'vrfs' in tenant_data %}
+{%             for vrf_name, vrf_data in tenant_data['vrfs'].items() %}
+  - {{ vrf_name }}
+{%             endfor %}
+{%         endif %}
+{%     endfor %}
+{% endif %}
+
+{% if 'firewalls' in hostvars[groups[fabric_ports][0]] %}
+{%     for firewall_name, firewall_data in hostvars[groups[fabric_ports][0]]['firewalls'].items() %}
+{%         if inventory_hostname | upper == firewall_name | upper %}
+interfaces:
+{%         for adapter in firewall_data['adapters'] %}
+{%             for interface in adapter['server_ports'] %}
+  - if_name: "{{ interface }}"
+    mode: "layer3"
+{%             endfor %}
+{%         endfor %}
+{%         endif %}
+{%     endfor %}
+{% endif %}
+
+l3_subinterfaces:
+{% if 'tenants' in hostvars[groups[fabric_services][0]] %}
+{%     for tenant_name, tenant_data in hostvars[groups[fabric_services][0]]['tenants'].items() %}
+{%         if 'vrfs' in tenant_data %}
+{%             for vrf_name, vrf_data in tenant_data['vrfs'].items() %}
+{%                 for svi, svi_data in vrf_data['svis'].items() %}
+{%                     if 'firewalls' in svi_data %}
+{%                         for firewall in svi_data['firewalls'] %}
+{%                             if inventory_hostname | upper == firewall['name'] | upper %}
+  - name: "{{firewall['firewall_interface']}}.{{svi}}"
+    tag: {{ svi }}
+    enable_dhcp: false
+    ip: ["{{ firewall['firewall_ip'] }}"]
+    zone_name: "{{ vrf_name }}"
+    management_profile: "management_base"
+    virtual_router: "{{ tenant_name }}"
+{%                             endif %}
+{%                         endfor %}
+{%                     endif %}
+{%                 endfor %}
+{%             endfor %}
+{%         endif %}
+{%     endfor %}
+{% endif %}
+
+static_routes:
+{% set ns = namespace(next_hop='') %}
+{% if 'tenants' in hostvars[groups[fabric_services][0]] %}
+{%     for tenant_name, tenant_data in hostvars[groups[fabric_services][0]]['tenants'].items() %}
+{%         if 'vrfs' in tenant_data %}
+{%             for vrf_name, vrf_data in tenant_data['vrfs'].items() %}
+{%                 set ns.svis_networks = [] %}
+{%                 for svi, svi_data in vrf_data['svis'].items() %}
+{%                     if 'firewalls' in svi_data %}
+{%                         for firewall in svi_data['firewalls'] %}
+{%                             if inventory_hostname | upper != firewall['name'] | upper %}
+{%                                 do ns.svis_networks.append( svi_data['ip_address_virtual'] | ansible.netcommon.ipaddr('host/prefix') | ansible.netcommon.ipaddr('subnet') ) %}
+{%                             else %}
+{%                                 set ns.next_hop = svi_data['ip_address_virtual'] | ansible.netcommon.ipaddr('address') %}
+{%                             endif %}
+{%                         endfor %}
+{%                     else %}
+{%                         do ns.svis_networks.append( svi_data['ip_address_virtual'] | ansible.netcommon.ipaddr('host/prefix') | ansible.netcommon.ipaddr('subnet') ) %}
+{%                     endif %}
+{%                 endfor %}
+{%                 for route in ns.svis_networks %}
+  - name: "to {{ vrf_name }}"
+    destination: '{{ route }}'
+    nexthop: '{{ ns.next_hop }}'
+    virtual_router: '{{ tenant_name }}'
+{%                 endfor %}
+{%                 set ns.svis_networks = [] %}
+{%             endfor %}
+{%         endif %}
+{%     endfor %}
+{% endif %}
+
+security_objects:
+{% if 'tenants' in hostvars[groups[fabric_services][0]] %}
+{%     for tenant_name, tenant_data in hostvars[groups[fabric_services][0]]['tenants'].items() %}
+{%         if 'vrfs' in tenant_data %}
+{%             for vrf_name, vrf_data in tenant_data['vrfs'].items() %}
+{%                 for svi, svi_data in vrf_data['svis'].items() %}
+  - name: '{{ svi_data['name'] }}'
+    value: '{{ svi_data['ip_address_virtual'] | ansible.netcommon.ipaddr('host/prefix') | ansible.netcommon.ipaddr('subnet') }}'
+    description: '{{ svi_data['name'] }}'
+{%                 endfor %}
+{%             endfor %}
+{%         endif %}
+{%     endfor %}
+{% endif %}

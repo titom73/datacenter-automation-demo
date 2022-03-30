@@ -1,5 +1,5 @@
 router_bgp:
-  as: '65101'
+  as: '65102'
   router_id: 192.168.1.8
   bgp_defaults:
   - no bgp default ipv4-unicast
@@ -10,7 +10,7 @@ router_bgp:
   peer_groups:
     MLAG-IPv4-UNDERLAY-PEER:
       type: ipv4
-      remote_as: '65101'
+      remote_as: '65102'
       next_hop_self: true
       maximum_routes: 12000
       send_community: all
@@ -41,11 +41,11 @@ router_bgp:
     172.31.255.20:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65001'
-      description: switch01_ethernet2
+      description: switch01_ethernet4
     172.31.255.22:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65001'
-      description: switch02_ethernet2
+      description: switch02_ethernet4
     192.168.1.1:
       peer_group: EVPN-OVERLAY-PEERS
       description: switch01
@@ -61,6 +61,32 @@ router_bgp:
     peer_groups:
       EVPN-OVERLAY-PEERS:
         activate: true
+  vrfs:
+    TENANT_A_SERVER:
+      router_id: 192.168.1.8
+      rd: 192.168.1.8:11
+      route_targets:
+        import:
+          evpn:
+          - '11:11'
+        export:
+          evpn:
+          - '11:11'
+      neighbors:
+        172.31.253.10:
+          peer_group: MLAG-IPv4-UNDERLAY-PEER
+      redistribute_routes:
+      - connected
+      - static
+  vlans:
+    111:
+      tenant: Tenant_A
+      rd: 192.168.1.8:10111
+      route_targets:
+        both:
+        - 10111:10111
+      redistribute_routes:
+      - learned
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -115,6 +141,9 @@ clock:
 vrfs:
   MGMT:
     ip_routing: false
+  TENANT_A_SERVER:
+    tenant: Tenant_A
+    ip_routing: true
 management_interfaces:
   Management1:
     description: oob_management
@@ -138,6 +167,14 @@ vlans:
     name: MLAG_PEER
     trunk_groups:
     - MLAG
+  111:
+    tenant: Tenant_A
+    name: PR01-SERVER
+  3010:
+    tenant: Tenant_A
+    name: MLAG_iBGP_TENANT_A_SERVER
+    trunk_groups:
+    - LEAF_PEER_L3
 vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
@@ -149,6 +186,22 @@ vlan_interfaces:
     shutdown: false
     ip_address: 172.31.253.9/31
     no_autostate: true
+    mtu: 9000
+  Vlan111:
+    tenant: Tenant_A
+    tags:
+    - pod02
+    description: PR01-SERVER
+    shutdown: false
+    vrf: TENANT_A_SERVER
+    ip_address_virtual: 10.1.111.254/24
+  Vlan3010:
+    tenant: Tenant_A
+    type: underlay_peering
+    shutdown: false
+    description: 'MLAG_PEER_L3_iBGP: vrf TENANT_A_SERVER'
+    vrf: TENANT_A_SERVER
+    ip_address: 172.31.253.11/31
     mtu: 9000
 port_channel_interfaces:
   Port-Channel3:
@@ -173,18 +226,18 @@ ethernet_interfaces:
       mode: active
   ethernet1:
     peer: switch01
-    peer_interface: ethernet2
+    peer_interface: ethernet4
     peer_type: spine
-    description: P2P_LINK_TO_SWITCH01_ethernet2
+    description: P2P_LINK_TO_SWITCH01_ethernet4
     mtu: 9000
     type: routed
     shutdown: false
     ip_address: 172.31.255.21/31
   ethernet2:
     peer: switch02
-    peer_interface: ethernet2
+    peer_interface: ethernet4
     peer_type: spine
-    description: P2P_LINK_TO_SWITCH02_ethernet2
+    description: P2P_LINK_TO_SWITCH02_ethernet4
     mtu: 9000
     type: routed
     shutdown: false
@@ -241,6 +294,12 @@ vxlan_interface:
       source_interface: Loopback1
       virtual_router_encapsulation_mac_address: mlag-system-id
       udp_port: 4789
+      vlans:
+        111:
+          vni: 10111
+      vrfs:
+        TENANT_A_SERVER:
+          vni: 11
 management_ssh:
   idle_timeout: 0
   enable: true

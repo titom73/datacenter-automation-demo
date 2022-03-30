@@ -61,6 +61,32 @@ router_bgp:
     peer_groups:
       EVPN-OVERLAY-PEERS:
         activate: true
+  vrfs:
+    TENANT_A_CLIENT:
+      router_id: 192.168.1.6
+      rd: 192.168.1.6:10
+      route_targets:
+        import:
+          evpn:
+          - '10:10'
+        export:
+          evpn:
+          - '10:10'
+      neighbors:
+        172.31.253.6:
+          peer_group: MLAG-IPv4-UNDERLAY-PEER
+      redistribute_routes:
+      - connected
+      - static
+  vlans:
+    110:
+      tenant: Tenant_A
+      rd: 192.168.1.6:10110
+      route_targets:
+        both:
+        - 10110:10110
+      redistribute_routes:
+      - learned
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -115,6 +141,9 @@ clock:
 vrfs:
   MGMT:
     ip_routing: false
+  TENANT_A_CLIENT:
+    tenant: Tenant_A
+    ip_routing: true
 management_interfaces:
   Management1:
     description: oob_management
@@ -138,6 +167,14 @@ vlans:
     name: MLAG_PEER
     trunk_groups:
     - MLAG
+  110:
+    tenant: Tenant_A
+    name: PR01-CLIENT
+  3009:
+    tenant: Tenant_A
+    name: MLAG_iBGP_TENANT_A_CLIENT
+    trunk_groups:
+    - LEAF_PEER_L3
 vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
@@ -149,6 +186,22 @@ vlan_interfaces:
     shutdown: false
     ip_address: 172.31.253.5/31
     no_autostate: true
+    mtu: 9000
+  Vlan110:
+    tenant: Tenant_A
+    tags:
+    - pod01
+    description: PR01-CLIENT
+    shutdown: false
+    vrf: TENANT_A_CLIENT
+    ip_address_virtual: 10.1.110.254/24
+  Vlan3009:
+    tenant: Tenant_A
+    type: underlay_peering
+    shutdown: false
+    description: 'MLAG_PEER_L3_iBGP: vrf TENANT_A_CLIENT'
+    vrf: TENANT_A_CLIENT
+    ip_address: 172.31.253.7/31
     mtu: 9000
 port_channel_interfaces:
   Port-Channel3:
@@ -241,6 +294,12 @@ vxlan_interface:
       source_interface: Loopback1
       virtual_router_encapsulation_mac_address: mlag-system-id
       udp_port: 4789
+      vlans:
+        110:
+          vni: 10110
+      vrfs:
+        TENANT_A_CLIENT:
+          vni: 10
 management_ssh:
   idle_timeout: 0
   enable: true

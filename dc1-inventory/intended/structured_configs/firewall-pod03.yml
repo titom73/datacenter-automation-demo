@@ -1,0 +1,51 @@
+---
+virtual_routers:
+  - Tenant_A
+
+security_zones:
+  - TENANT_A_CLIENT
+  - TENANT_A_SERVER
+
+interfaces:
+  - if_name: "ethernet1/1"
+    mode: "layer3"
+
+l3_subinterfaces:
+  - name: "ethernet1/1.10"
+    tag: 10
+    enable_dhcp: false
+    ip: ["10.1.10.1/30"]
+    zone_name: "TENANT_A_CLIENT"
+    management_profile: "standard-interface-management"
+    virtual_router: "Tenant_A"
+  - name: "ethernet1/1.11"
+    tag: 11
+    enable_dhcp: false
+    ip: ["10.1.11.1/30"]
+    zone_name: "TENANT_A_SERVER"
+    management_profile: "standard-interface-management"
+    virtual_router: "Tenant_A"
+
+static_routes:
+  - name: "to TENANT_A_CLIENT"
+    destination: '10.1.110.0/24'
+    nexthop: '10.1.10.2'
+    virtual_router: 'Tenant_A'
+  - name: "to TENANT_A_SERVER"
+    destination: '10.1.111.0/24'
+    nexthop: '10.1.11.2'
+    virtual_router: 'Tenant_A'
+
+security_objects:
+  - name: 'PR01-CLIENT'
+    value: '10.1.110.0/24'
+    description: 'PR01-CLIENT'
+  - name: 'PR01-FW-INTERCO-CLIENT'
+    value: '10.1.10.0/30'
+    description: 'PR01-FW-INTERCO-CLIENT'
+  - name: 'PR01-SERVER'
+    value: '10.1.111.0/24'
+    description: 'PR01-SERVER'
+  - name: 'PR01-FW-INTERCO-SERVER'
+    value: '10.1.11.0/30'
+    description: 'PR01-FW-INTERCO-SERVER'
