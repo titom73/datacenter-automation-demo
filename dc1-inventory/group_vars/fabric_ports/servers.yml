@@ -6,7 +6,7 @@ servers:
       - type: nic
         server_ports: [Eth1]
         switch_ports: [Ethernet4]
-        switches: [switch03]
+        switches: [switch013]
         profile: A-PR01-CLIENT
   SRV-POD01-SERVER:
     rack: POD02
@@ -14,5 +14,5 @@ servers:
       - type: nic
         server_ports: [Eth1]
         switch_ports: [Ethernet4]
-        switches: [switch05]
+        switches: [switch014]
         profile: A-PR01-SERVER

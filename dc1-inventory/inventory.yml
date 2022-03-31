@@ -41,6 +41,26 @@ datacenter:
                   # ansible_port: 8008
                   ansible_host: 10.73.254.8
 
+        l2leafs:
+          vars:
+            type: l2leaf
+          children:
+            rack01:
+              hosts:
+                switch013:
+                  # ansible_port: 8003
+                  ansible_host: 10.73.254.13
+            rack02:
+              hosts:
+                switch014:
+                  # ansible_port: 8003
+                  ansible_host: 10.73.254.14
+            rack03:
+              hosts:
+                switch015:
+                  # ansible_port: 8003
+                  ansible_host: 10.73.254.15
+
     fabric_services:
       children:
         l3leafs:

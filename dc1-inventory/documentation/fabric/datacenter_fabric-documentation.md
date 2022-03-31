@@ -25,6 +25,9 @@
 | datacenter_fabric | l3leaf | switch06 | 10.73.254.6/24 | veos-lab | Provisioned |
 | datacenter_fabric | l3leaf | switch07 | 10.73.254.7/24 | veos-lab | Provisioned |
 | datacenter_fabric | l3leaf | switch08 | 10.73.254.8/24 | veos-lab | Provisioned |
+| datacenter_fabric | l2leaf | switch013 | 10.73.254.13/24 | veos-lab | Provisioned |
+| datacenter_fabric | l2leaf | switch014 | 10.73.254.14/24 | veos-lab | Provisioned |
+| datacenter_fabric | l2leaf | switch015 | 10.73.254.15/24 | veos-lab | Provisioned |
 
 > Provision status is based on Ansible inventory declaration and do not represent real status from CloudVision.
 
@@ -49,8 +52,14 @@
 | spine | switch02 | ethernet5 | l3leaf | switch07 | ethernet2 |
 | spine | switch02 | ethernet6 | l3leaf | switch08 | ethernet2 |
 | l3leaf | switch03 | Ethernet3 | mlag_peer | switch04 | Ethernet3 |
+| l3leaf | switch03 | ethernet4 | l2leaf | switch013 | ethernet1 |
+| l3leaf | switch04 | ethernet4 | l2leaf | switch013 | ethernet2 |
 | l3leaf | switch05 | Ethernet3 | mlag_peer | switch06 | Ethernet3 |
+| l3leaf | switch05 | ethernet4 | l2leaf | switch014 | ethernet1 |
+| l3leaf | switch06 | ethernet4 | l2leaf | switch014 | ethernet2 |
 | l3leaf | switch07 | Ethernet3 | mlag_peer | switch08 | Ethernet3 |
+| l3leaf | switch07 | ethernet4 | l2leaf | switch015 | ethernet1 |
+| l3leaf | switch08 | ethernet4 | l2leaf | switch015 | ethernet2 |
 
 # Fabric IP Allocation
 

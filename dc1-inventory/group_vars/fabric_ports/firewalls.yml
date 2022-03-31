@@ -6,5 +6,5 @@ firewalls:
       - type: nic
         server_ports: [ ethernet1/1 ]
         switch_ports: [ Ethernet4 ]
-        switches: [ switch07 ]
+        switches: [ switch015 ]
         profile: A-PR01-FIREWALL
