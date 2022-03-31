@@ -2,6 +2,8 @@
 
 This repository is a demo for building a Datacenter (network & Firewalls) with ansible. All this automation content is based on [Arista AVD data model](https://www.avd.sh) with some deviations to add support for Firewall configuration.
 
+__Disclaimer__: It is a __Proof of concept__ repository and it is not ready for production. use it at your own risk.
+
 ## Topology
 
 Repository is going to build the following topology with an IP Fabric running EVPN whith 1 tenant, 2 VRFs to connect 1 server, 1 client and 1 firewall each on a POD.
