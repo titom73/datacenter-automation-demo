@@ -46,6 +46,9 @@ All devices are configured with a management IP address only and the following c
 | switch06 | 10.73.254.6/24|
 | switch07 | 10.73.254.7/24|
 | switch08 | 10.73.254.8/24|
+| switch013 | 10.73.254.13/24|
+| switch014 | 10.73.254.14/24|
+| switch015 | 10.73.254.15/24|
 
 ## Build Initial network configuration
 
@@ -174,9 +177,7 @@ security_policies:
     action: 'allow'
 ```
 
-## Misc
-### Congigure runner
+## License
 
-```bash
-$ sudo route -n add -net 10.73.254.0/24 10.73.1.240
-```
+Project under [APACHE2 license](./LICENSE)
+
