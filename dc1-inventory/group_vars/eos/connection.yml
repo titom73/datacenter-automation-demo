@@ -16,3 +16,10 @@ ansible_ssh_pass: !vault |
   3433
 ansible_become: yes
 ansible_become_method: enable
+
+provider:
+  host: '{{ ansible_host }}'
+  transport: eapi
+  username: '{{ ansible_user }}'
+  password: '{{ ansible_ssh_pass }}'
+  port: '{{ ansible_port| default(443) }}'

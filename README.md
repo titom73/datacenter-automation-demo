@@ -34,7 +34,17 @@ Firewall connect both VRFs with following settings:
 - Client security zone: `TENANT_A_CLIENT`
 - Server security zone: `TENANT_A_SERVER`
 
+__A full demo scrpit is available [here](./DEMO.md)__
+
 ## Available Playbooks
+
+### Check devices connectivity
+
+- Collect facts as management connectivity checks
+
+```bash
+ansible-playbook playbooks/check-device-connectivity.yml --ask-vault-pass
+```
 
 ### Build structured configurations
 
@@ -104,11 +114,13 @@ Once configurations are generated, you can review them and validate it is genera
 ansible-playbook playbooks/avd-build-and-deploy.yml --tags deploy --ask-vault-pass
 ```
 
-As the goal of this repository is to detail how to extend data model, we won't go through AVD data model in detaul and it would be better to read [this repo example](https://github.com/titom73/ansible-avd-cloudvision-demo) or [AVD website](https://www.avd.sh)
+As the goal of this repository is to detail how to extend data model, we won't go through AVD data model in detaul and it would be better to read [this repo example](https://github.com/titom73/ansible-avd-cloudvision-demo) or [AVD website](https://www.avd.sh).
 
 ## Build Security part
 
 In our example, we will build data to provision Palo Alto firewall from data coming from AVD data model. Of course, since this data model is not built for security devices, we will extend some sections.
+
+All the transformation from AVD data model to those used by Palo Alto modules are part of this custom role [`avd_firewall_panos`](,.roles/avd_firewall_panos/)
 
 ### Extend port definition:
 

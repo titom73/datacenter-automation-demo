@@ -6,4 +6,3 @@
     - name: 'Generate strctured config for {{ inventory_hostname }}'
       include_role:
         name: avd_firewall_panos
-
