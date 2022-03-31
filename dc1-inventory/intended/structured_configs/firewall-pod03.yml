@@ -16,14 +16,14 @@ l3_subinterfaces:
     enable_dhcp: false
     ip: ["10.1.10.1/30"]
     zone_name: "TENANT_A_CLIENT"
-    management_profile: "standard-interface-management"
+    management_profile: "management_base"
     virtual_router: "Tenant_A"
   - name: "ethernet1/1.11"
     tag: 11
     enable_dhcp: false
     ip: ["10.1.11.1/30"]
     zone_name: "TENANT_A_SERVER"
-    management_profile: "standard-interface-management"
+    management_profile: "management_base"
     virtual_router: "Tenant_A"
 
 static_routes:

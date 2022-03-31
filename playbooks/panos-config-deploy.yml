@@ -67,8 +67,11 @@
       enable_dhcp: false
       ip: '{{item.ip}}'
       zone_name: "{{item.zone_name}}"
+      management_profile: '{{ item.management_profile }}'
       vr_name: "{{ item.virtual_router }}"
       state: "{{ state | default('present') }}"
+      # Workaround from https://github.com/PaloAltoNetworks/pan-os-ansible/issues/238
+      vsys: "vsys1"
     loop:
       '{{ l3_subinterfaces }}'
 
