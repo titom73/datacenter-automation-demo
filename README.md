@@ -32,6 +32,44 @@ Firewall connect both VRFs with following settings:
 - Client security zone: `TENANT_A_CLIENT`
 - Server security zone: `TENANT_A_SERVER`
 
+## Available Playbooks
+
+### Build structured configurations
+
+- AVD / Network side:
+
+```shell
+ansible-playbook playbooks/avd-build-and-deploy.yml --tags build --ask-vault-pass
+```
+
+- Palo Alto / Security side:
+
+```shell
+ansible-playbook-vault playbooks/panos-config-deploy.yml --tags build --ask-vault-pass
+```
+
+### Deploy Configurations
+
+- AVD / Network side:
+
+```shell
+ansible-playbook playbooks/avd-build-and-deploy.yml --tags deploy --ask-vault-pass
+```
+
+- Palo Alto / Security side:
+
+```shell
+ansible-playbook-vault playbooks/panos-config-deploy.yml --tags deploy --ask-vault-pass
+```
+
+### Restore initial states
+
+- Palo Alto / Security side:
+
+```shell
+ansible-playbook-vault playbooks/panos-config-remove.yml --ask-vault-pass
+```
+
 ## Initial state
 
 All devices are configured with a management IP address only and the following credentials: `ansible`/`ansible` and connected to an Out Of band management.
