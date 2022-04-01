@@ -84,26 +84,12 @@ ethernet_interfaces:
     channel_group:
       id: 1
       mode: active
-  Ethernet4:
-    peer: SRV-POD01-SERVER
-    peer_interface: Eth1
-    peer_type: server
-    description: SRV-POD01-SERVER_Eth1
-    type: switched
-    shutdown: false
-    mode: access
-    vlans: 111
 port_channel_interfaces:
   Port-Channel1:
     description: POD02_Po5
     type: switched
     shutdown: false
-    vlans: 111
     mode: trunk
-vlans:
-  111:
-    tenant: Tenant_A
-    name: PR01-SERVER
 ip_igmp_snooping:
   globally_enabled: true
 management_ssh:

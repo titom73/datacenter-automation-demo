@@ -37,10 +37,7 @@ l3leaf,switch08,Ethernet3,mlag_peer,switch07,Ethernet3
 l3leaf,switch08,ethernet5,l2leaf,switch15,ethernet2
 l2leaf,switch13,ethernet1,l3leaf,switch03,ethernet5
 l2leaf,switch13,ethernet2,l3leaf,switch04,ethernet5
-l2leaf,switch13,Ethernet4,server,SRV-POD01-CLIENT,Eth1
 l2leaf,switch14,ethernet1,l3leaf,switch05,ethernet5
 l2leaf,switch14,ethernet2,l3leaf,switch06,ethernet5
-l2leaf,switch14,Ethernet4,server,SRV-POD01-SERVER,Eth1
 l2leaf,switch15,ethernet1,l3leaf,switch07,ethernet5
 l2leaf,switch15,ethernet2,l3leaf,switch08,ethernet5
-l2leaf,switch15,Ethernet4,firewall,FIREWALL-POD03,ethernet1/1

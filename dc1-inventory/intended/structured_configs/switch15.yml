@@ -84,29 +84,12 @@ ethernet_interfaces:
     channel_group:
       id: 1
       mode: active
-  Ethernet4:
-    peer: FIREWALL-POD03
-    peer_interface: ethernet1/1
-    peer_type: firewall
-    description: FIREWALL-POD03_ethernet1/1
-    type: switched
-    shutdown: false
-    mode: trunk
-    vlans: 10,11
 port_channel_interfaces:
   Port-Channel1:
     description: POD03_Po5
     type: switched
     shutdown: false
-    vlans: 10-11
     mode: trunk
-vlans:
-  10:
-    tenant: Tenant_A
-    name: PR01-FW-INTERCO-CLIENT
-  11:
-    tenant: Tenant_A
-    name: PR01-FW-INTERCO-SERVER
 ip_igmp_snooping:
   globally_enabled: true
 management_ssh:

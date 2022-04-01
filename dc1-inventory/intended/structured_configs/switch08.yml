@@ -61,66 +61,10 @@ router_bgp:
     peer_groups:
       EVPN-OVERLAY-PEERS:
         activate: true
-  vrfs:
-    TENANT_A_CLIENT:
-      router_id: 192.168.1.10
-      rd: 192.168.1.10:10
-      route_targets:
-        import:
-          evpn:
-          - '10:10'
-        export:
-          evpn:
-          - '10:10'
-      neighbors:
-        172.31.253.14:
-          peer_group: MLAG-IPv4-UNDERLAY-PEER
-      redistribute_routes:
-      - connected
-      - static
-    TENANT_A_SERVER:
-      router_id: 192.168.1.10
-      rd: 192.168.1.10:11
-      route_targets:
-        import:
-          evpn:
-          - '11:11'
-        export:
-          evpn:
-          - '11:11'
-      neighbors:
-        172.31.253.14:
-          peer_group: MLAG-IPv4-UNDERLAY-PEER
-      redistribute_routes:
-      - connected
-      - static
-  vlans:
-    10:
-      tenant: Tenant_A
-      rd: 192.168.1.10:10010
-      route_targets:
-        both:
-        - 10010:10010
-      redistribute_routes:
-      - learned
-    11:
-      tenant: Tenant_A
-      rd: 192.168.1.10:10011
-      route_targets:
-        both:
-        - 10011:10011
-      redistribute_routes:
-      - learned
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
   gateway: 10.73.254.253
-- destination_address_prefix: 10.1.0.0/16
-  vrf: TENANT_A_CLIENT
-  gateway: 10.1.10.1
-- destination_address_prefix: 10.1.0.0/16
-  vrf: TENANT_A_SERVER
-  gateway: 10.1.11.1
 service_routing_protocols_model: multi-agent
 ip_routing: true
 daemon_terminattr:
@@ -171,12 +115,6 @@ clock:
 vrfs:
   MGMT:
     ip_routing: false
-  TENANT_A_CLIENT:
-    tenant: Tenant_A
-    ip_routing: true
-  TENANT_A_SERVER:
-    tenant: Tenant_A
-    ip_routing: true
 management_interfaces:
   Management1:
     description: oob_management
@@ -200,22 +138,6 @@ vlans:
     name: MLAG_PEER
     trunk_groups:
     - MLAG
-  10:
-    tenant: Tenant_A
-    name: PR01-FW-INTERCO-CLIENT
-  3009:
-    tenant: Tenant_A
-    name: MLAG_iBGP_TENANT_A_CLIENT
-    trunk_groups:
-    - LEAF_PEER_L3
-  11:
-    tenant: Tenant_A
-    name: PR01-FW-INTERCO-SERVER
-  3010:
-    tenant: Tenant_A
-    name: MLAG_iBGP_TENANT_A_SERVER
-    trunk_groups:
-    - LEAF_PEER_L3
 vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
@@ -227,38 +149,6 @@ vlan_interfaces:
     shutdown: false
     ip_address: 172.31.253.13/31
     no_autostate: true
-    mtu: 9000
-  Vlan10:
-    tenant: Tenant_A
-    tags:
-    - pod03
-    description: PR01-FW-INTERCO-CLIENT
-    shutdown: false
-    vrf: TENANT_A_CLIENT
-    ip_address_virtual: 10.1.10.2/30
-  Vlan3009:
-    tenant: Tenant_A
-    type: underlay_peering
-    shutdown: false
-    description: 'MLAG_PEER_L3_iBGP: vrf TENANT_A_CLIENT'
-    vrf: TENANT_A_CLIENT
-    ip_address: 172.31.253.15/31
-    mtu: 9000
-  Vlan11:
-    tenant: Tenant_A
-    tags:
-    - pod03
-    description: PR01-FW-INTERCO-SERVER
-    shutdown: false
-    vrf: TENANT_A_SERVER
-    ip_address_virtual: 10.1.11.2/30
-  Vlan3010:
-    tenant: Tenant_A
-    type: underlay_peering
-    shutdown: false
-    description: 'MLAG_PEER_L3_iBGP: vrf TENANT_A_SERVER'
-    vrf: TENANT_A_SERVER
-    ip_address: 172.31.253.15/31
     mtu: 9000
 port_channel_interfaces:
   Port-Channel3:
@@ -274,7 +164,6 @@ port_channel_interfaces:
     description: SWITCH15_Po1
     type: switched
     shutdown: false
-    vlans: 10-11
     mode: trunk
     mlag: 5
 ethernet_interfaces:
@@ -368,16 +257,6 @@ vxlan_interface:
       source_interface: Loopback1
       virtual_router_encapsulation_mac_address: mlag-system-id
       udp_port: 4789
-      vlans:
-        10:
-          vni: 10010
-        11:
-          vni: 10011
-      vrfs:
-        TENANT_A_CLIENT:
-          vni: 10
-        TENANT_A_SERVER:
-          vni: 11
 management_ssh:
   idle_timeout: 0
   enable: true

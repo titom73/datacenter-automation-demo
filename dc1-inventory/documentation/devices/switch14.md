@@ -20,9 +20,6 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
   - [Internal VLAN Allocation Policy Summary](#internal-vlan-allocation-policy-summary)
   - [Internal VLAN Allocation Policy Configuration](#internal-vlan-allocation-policy-configuration)
-- [VLANs](#vlans)
-  - [VLANs Summary](#vlans-summary)
-  - [VLANs Device Configuration](#vlans-device-configuration)
 - [Interfaces](#interfaces)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
@@ -295,22 +292,6 @@ spanning-tree mst 0 priority 4096
 vlan internal order ascending range 1006 1199
 ```
 
-# VLANs
-
-## VLANs Summary
-
-| VLAN ID | Name | Trunk Groups |
-| ------- | ---- | ------------ |
-| 111 | PR01-SERVER | - |
-
-## VLANs Device Configuration
-
-```eos
-!
-vlan 111
-   name PR01-SERVER
-```
-
 # Interfaces
 
 ## Ethernet Interfaces
@@ -321,9 +302,8 @@ vlan 111
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| ethernet1 | SWITCH05_ethernet5 | *trunk | *111 | *- | *- | 1 |
-| ethernet2 | SWITCH06_ethernet5 | *trunk | *111 | *- | *- | 1 |
-| Ethernet4 |  SRV-POD01-SERVER_Eth1 | access | 111 | - | - | - |
+| ethernet1 | SWITCH05_ethernet5 | *trunk | *- | *- | *- | 1 |
+| ethernet2 | SWITCH06_ethernet5 | *trunk | *- | *- | *- | 1 |
 
 *Inherited from Port-Channel Interface
 
@@ -340,13 +320,6 @@ interface ethernet2
    description SWITCH06_ethernet5
    no shutdown
    channel-group 1 mode active
-!
-interface Ethernet4
-   description SRV-POD01-SERVER_Eth1
-   no shutdown
-   switchport
-   switchport access vlan 111
-   switchport mode access
 ```
 
 ## Port-Channel Interfaces
@@ -357,7 +330,7 @@ interface Ethernet4
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | POD02_Po5 | switched | trunk | 111 | - | - | - | - | - | - |
+| Port-Channel1 | POD02_Po5 | switched | trunk | - | - | - | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -367,7 +340,6 @@ interface Port-Channel1
    description POD02_Po5
    no shutdown
    switchport
-   switchport trunk allowed vlan 111
    switchport mode trunk
 ```
 

@@ -20,9 +20,6 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
   - [Internal VLAN Allocation Policy Summary](#internal-vlan-allocation-policy-summary)
   - [Internal VLAN Allocation Policy Configuration](#internal-vlan-allocation-policy-configuration)
-- [VLANs](#vlans)
-  - [VLANs Summary](#vlans-summary)
-  - [VLANs Device Configuration](#vlans-device-configuration)
 - [Interfaces](#interfaces)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
@@ -295,26 +292,6 @@ spanning-tree mst 0 priority 4096
 vlan internal order ascending range 1006 1199
 ```
 
-# VLANs
-
-## VLANs Summary
-
-| VLAN ID | Name | Trunk Groups |
-| ------- | ---- | ------------ |
-| 10 | PR01-FW-INTERCO-CLIENT | - |
-| 11 | PR01-FW-INTERCO-SERVER | - |
-
-## VLANs Device Configuration
-
-```eos
-!
-vlan 10
-   name PR01-FW-INTERCO-CLIENT
-!
-vlan 11
-   name PR01-FW-INTERCO-SERVER
-```
-
 # Interfaces
 
 ## Ethernet Interfaces
@@ -325,9 +302,8 @@ vlan 11
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| ethernet1 | SWITCH07_ethernet5 | *trunk | *10-11 | *- | *- | 1 |
-| ethernet2 | SWITCH08_ethernet5 | *trunk | *10-11 | *- | *- | 1 |
-| Ethernet4 |  FIREWALL-POD03_ethernet1/1 | trunk | 10,11 | - | - | - |
+| ethernet1 | SWITCH07_ethernet5 | *trunk | *- | *- | *- | 1 |
+| ethernet2 | SWITCH08_ethernet5 | *trunk | *- | *- | *- | 1 |
 
 *Inherited from Port-Channel Interface
 
@@ -344,13 +320,6 @@ interface ethernet2
    description SWITCH08_ethernet5
    no shutdown
    channel-group 1 mode active
-!
-interface Ethernet4
-   description FIREWALL-POD03_ethernet1/1
-   no shutdown
-   switchport
-   switchport trunk allowed vlan 10,11
-   switchport mode trunk
 ```
 
 ## Port-Channel Interfaces
@@ -361,7 +330,7 @@ interface Ethernet4
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | POD03_Po5 | switched | trunk | 10-11 | - | - | - | - | - | - |
+| Port-Channel1 | POD03_Po5 | switched | trunk | - | - | - | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -371,7 +340,6 @@ interface Port-Channel1
    description POD03_Po5
    no shutdown
    switchport
-   switchport trunk allowed vlan 10-11
    switchport mode trunk
 ```
 
