@@ -189,4 +189,7 @@ ansible-playbook-vault playbooks/panos-config-deploy.yml --tags policy --ask-vau
 # from Client VM to Server VM
 $ ping 10.1.111.10
 ```
-> This test should work.
+
+![](medias/client-to-server-ping.png)
+
+Now you can experiment by adding new services and firewall configuration
