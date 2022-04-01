@@ -66,9 +66,9 @@ management_api_http:
 ethernet_interfaces:
   ethernet1:
     peer: switch03
-    peer_interface: ethernet4
+    peer_interface: ethernet5
     peer_type: l3leaf
-    description: SWITCH03_ethernet4
+    description: SWITCH03_ethernet5
     type: switched
     shutdown: false
     channel_group:
@@ -76,20 +76,34 @@ ethernet_interfaces:
       mode: active
   ethernet2:
     peer: switch04
-    peer_interface: ethernet4
+    peer_interface: ethernet5
     peer_type: l3leaf
-    description: SWITCH04_ethernet4
+    description: SWITCH04_ethernet5
     type: switched
     shutdown: false
     channel_group:
       id: 1
       mode: active
-port_channel_interfaces:
-  Port-Channel1:
-    description: POD01_Po4
+  Ethernet4:
+    peer: SRV-POD01-CLIENT
+    peer_interface: Eth1
+    peer_type: server
+    description: SRV-POD01-CLIENT_Eth1
     type: switched
     shutdown: false
+    mode: access
+    vlans: 110
+port_channel_interfaces:
+  Port-Channel1:
+    description: POD01_Po5
+    type: switched
+    shutdown: false
+    vlans: 110
     mode: trunk
+vlans:
+  110:
+    tenant: Tenant_A
+    name: PR01-CLIENT
 ip_igmp_snooping:
   globally_enabled: true
 management_ssh:

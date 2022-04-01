@@ -8,3 +8,13 @@ security_policies:
     destination_ip: ['PR01-SERVER']
     application: ['icmp', 'ping']
     action: 'allow'
+  - rule_name: 'HTTP Permit'
+    rule_type: 'interzone'
+    description: 'Allow HTTP traffic'
+    source_zone: ['TENANT_A_CLIENT']
+    source_ip: ['PR01-CLIENT']
+    destination_zone: ['TENANT_A_SERVER']
+    destination_ip: ['PR01-SERVER']
+    application: ['any']
+    service: ['service-http']
+    action: 'allow'

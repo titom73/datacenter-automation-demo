@@ -19,7 +19,7 @@ tenants:
         static_routes:
           - destination_address_prefix: 10.1.0.0/16
             gateway: 10.1.10.1
-            nodes: ['swtch07', 'switch08']
+            nodes: ['switch07', 'switch08']
         redistribute_static: true
         svis:
           110:
@@ -34,7 +34,6 @@ tenants:
             ip_address_virtual: 10.1.10.2/30
             firewalls:
               - name: firewall-pod03
-                is_aggregate_interface: true
                 firewall_interface: ethernet1/1
                 firewall_ip: 10.1.10.1/30
 
@@ -43,7 +42,7 @@ tenants:
         static_routes:
           - destination_address_prefix: 10.1.0.0/16
             gateway: 10.1.11.1
-            nodes: ['swtch07', 'switch08']
+            nodes: ['switch07', 'switch08']
         redistribute_static: true
         svis:
           111:

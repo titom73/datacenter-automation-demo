@@ -1,0 +1,588 @@
+<config version="8.0.0" urldb="paloaltonetworks">
+  <mgt-config>
+    <users>
+      <entry name="********">
+        <phash>fnRL/G5lXVMug</phash>
+        <permissions>
+          <role-based>
+            <superuser>yes</superuser>
+          </role-based>
+        </permissions>
+      </entry>
+    </users>
+  </mgt-config>
+  <shared>
+    <application />
+    <application-group />
+    <service />
+    <service-group />
+    <botnet>
+      <configuration>
+        <http>
+          <dynamic-dns>
+            <enabled>yes</enabled>
+            <threshold>5</threshold>
+          </dynamic-dns>
+          <malware-sites>
+            <enabled>yes</enabled>
+            <threshold>5</threshold>
+          </malware-sites>
+          <recent-domains>
+            <enabled>yes</enabled>
+            <threshold>5</threshold>
+          </recent-domains>
+          <ip-domains>
+            <enabled>yes</enabled>
+            <threshold>10</threshold>
+          </ip-domains>
+          <executables-from-unknown-sites>
+            <enabled>yes</enabled>
+            <threshold>5</threshold>
+          </executables-from-unknown-sites>
+        </http>
+        <other-applications>
+          <irc>yes</irc>
+        </other-applications>
+        <unknown-applications>
+          <unknown-tcp>
+            <destinations-per-hour>10</destinations-per-hour>
+            <sessions-per-hour>10</sessions-per-hour>
+            <session-length>
+              <maximum-bytes>100</maximum-bytes>
+              <minimum-bytes>50</minimum-bytes>
+            </session-length>
+          </unknown-tcp>
+          <unknown-udp>
+            <destinations-per-hour>10</destinations-per-hour>
+            <sessions-per-hour>10</sessions-per-hour>
+            <session-length>
+              <maximum-bytes>100</maximum-bytes>
+              <minimum-bytes>50</minimum-bytes>
+            </session-length>
+          </unknown-udp>
+        </unknown-applications>
+      </configuration>
+      <report>
+        <topn>100</topn>
+        <scheduled>yes</scheduled>
+      </report>
+    </botnet>
+  </shared>
+  <devices>
+    <entry name="localhost.localdomain">
+      <network>
+        <interface>
+          <ethernet>
+            <entry name="ethernet1/1">
+              <layer3>
+                <lldp>
+                  <enable>yes</enable>
+                </lldp>
+                <units>
+                  <entry name="ethernet1/1.10">
+                    <tag>10</tag>
+                    <ip>
+                      <entry name="10.1.10.1/30" />
+                    </ip>
+                    <interface-management-profile>management_base</interface-management-profile>
+                  </entry>
+                  <entry name="ethernet1/1.11">
+                    <tag>11</tag>
+                    <ip>
+                      <entry name="10.1.11.1/30" />
+                    </ip>
+                    <interface-management-profile>management_base</interface-management-profile>
+                  </entry>
+                </units>
+              </layer3>
+            </entry>
+          </ethernet>
+        </interface>
+        <profiles>
+          <monitor-profile>
+            <entry name="default">
+              <interval>3</interval>
+              <threshold>5</threshold>
+              <action>wait-recover</action>
+            </entry>
+          </monitor-profile>
+          <zone-protection-profile>
+            <entry name="standard-security-zone">
+              <flood>
+                <tcp-syn>
+                  <red>
+                    <alarm-rate>10000</alarm-rate>
+                    <activate-rate>10000</activate-rate>
+                    <maximal-rate>40000</maximal-rate>
+                  </red>
+                  <enable>no</enable>
+                </tcp-syn>
+                <icmp>
+                  <red>
+                    <alarm-rate>10000</alarm-rate>
+                    <activate-rate>10000</activate-rate>
+                    <maximal-rate>40000</maximal-rate>
+                  </red>
+                  <enable>yes</enable>
+                </icmp>
+                <icmpv6>
+                  <red>
+                    <alarm-rate>10000</alarm-rate>
+                    <activate-rate>10000</activate-rate>
+                    <maximal-rate>40000</maximal-rate>
+                  </red>
+                  <enable>no</enable>
+                </icmpv6>
+                <other-ip>
+                  <red>
+                    <alarm-rate>10000</alarm-rate>
+                    <activate-rate>10000</activate-rate>
+                    <maximal-rate>40000</maximal-rate>
+                  </red>
+                  <enable>no</enable>
+                </other-ip>
+                <udp>
+                  <red>
+                    <alarm-rate>10000</alarm-rate>
+                    <activate-rate>10000</activate-rate>
+                    <maximal-rate>40000</maximal-rate>
+                  </red>
+                  <enable>no</enable>
+                </udp>
+              </flood>
+            </entry>
+          </zone-protection-profile>
+          <interface-management-profile>
+            <entry name="management_base">
+              <ping>yes</ping>
+              <ssh>yes</ssh>
+            </entry>
+          </interface-management-profile>
+          <lldp-profile>
+            <entry name="Generic LLDP Profile">
+              <option-tlvs>
+                <management-address>
+                  <enabled>no</enabled>
+                </management-address>
+                <port-description>yes</port-description>
+                <system-name>yes</system-name>
+                <system-description>yes</system-description>
+                <system-capabilities>yes</system-capabilities>
+              </option-tlvs>
+            </entry>
+          </lldp-profile>
+        </profiles>
+        <ike>
+          <crypto-profiles>
+            <ike-crypto-profiles>
+              <entry name="default">
+                <encryption>
+                  <member>aes-128-cbc</member>
+                  <member>3des</member>
+                </encryption>
+                <hash>
+                  <member>sha1</member>
+                </hash>
+                <dh-group>
+                  <member>group2</member>
+                </dh-group>
+                <lifetime>
+                  <hours>8</hours>
+                </lifetime>
+              </entry>
+              <entry name="Suite-B-GCM-128">
+                <encryption>
+                  <member>aes-128-cbc</member>
+                </encryption>
+                <hash>
+                  <member>sha256</member>
+                </hash>
+                <dh-group>
+                  <member>group19</member>
+                </dh-group>
+                <lifetime>
+                  <hours>8</hours>
+                </lifetime>
+              </entry>
+              <entry name="Suite-B-GCM-256">
+                <encryption>
+                  <member>aes-256-cbc</member>
+                </encryption>
+                <hash>
+                  <member>sha384</member>
+                </hash>
+                <dh-group>
+                  <member>group20</member>
+                </dh-group>
+                <lifetime>
+                  <hours>8</hours>
+                </lifetime>
+              </entry>
+            </ike-crypto-profiles>
+            <ipsec-crypto-profiles>
+              <entry name="default">
+                <esp>
+                  <encryption>
+                    <member>aes-128-cbc</member>
+                    <member>3des</member>
+                  </encryption>
+                  <authentication>
+                    <member>sha1</member>
+                  </authentication>
+                </esp>
+                <dh-group>group2</dh-group>
+                <lifetime>
+                  <hours>1</hours>
+                </lifetime>
+              </entry>
+              <entry name="Suite-B-GCM-128">
+                <esp>
+                  <encryption>
+                    <member>aes-128-gcm</member>
+                  </encryption>
+                  <authentication>
+                    <member>none</member>
+                  </authentication>
+                </esp>
+                <dh-group>group19</dh-group>
+                <lifetime>
+                  <hours>1</hours>
+                </lifetime>
+              </entry>
+              <entry name="Suite-B-GCM-256">
+                <esp>
+                  <encryption>
+                    <member>aes-256-gcm</member>
+                  </encryption>
+                  <authentication>
+                    <member>none</member>
+                  </authentication>
+                </esp>
+                <dh-group>group20</dh-group>
+                <lifetime>
+                  <hours>1</hours>
+                </lifetime>
+              </entry>
+            </ipsec-crypto-profiles>
+            <global-protect-app-crypto-profiles>
+              <entry name="default">
+                <encryption>
+                  <member>aes-128-cbc</member>
+                </encryption>
+                <authentication>
+                  <member>sha1</member>
+                </authentication>
+              </entry>
+            </global-protect-app-crypto-profiles>
+          </crypto-profiles>
+        </ike>
+        <qos>
+          <profile>
+            <entry name="default">
+              <class>
+                <entry name="class1">
+                  <priority>real-time</priority>
+                </entry>
+                <entry name="class2">
+                  <priority>high</priority>
+                </entry>
+                <entry name="class3">
+                  <priority>high</priority>
+                </entry>
+                <entry name="class4">
+                  <priority>medium</priority>
+                </entry>
+                <entry name="class5">
+                  <priority>medium</priority>
+                </entry>
+                <entry name="class6">
+                  <priority>low</priority>
+                </entry>
+                <entry name="class7">
+                  <priority>low</priority>
+                </entry>
+                <entry name="class8">
+                  <priority>low</priority>
+                </entry>
+              </class>
+            </entry>
+          </profile>
+        </qos>
+        <virtual-router>
+          <entry name="default">
+            <protocol>
+              <bgp>
+                <enable>no</enable>
+                <dampening-profile>
+                  <entry name="default">
+                    <cutoff>1.25</cutoff>
+                    <reuse>0.5</reuse>
+                    <max-hold-time>900</max-hold-time>
+                    <decay-half-life-reachable>300</decay-half-life-reachable>
+                    <decay-half-life-unreachable>900</decay-half-life-unreachable>
+                    <enable>yes</enable>
+                  </entry>
+                </dampening-profile>
+                <routing-options>
+                  <graceful-restart>
+                    <enable>yes</enable>
+                  </graceful-restart>
+                </routing-options>
+              </bgp>
+            </protocol>
+            <interface>
+              <member>ethernet1/1</member>
+            </interface>
+            <ecmp>
+              <algorithm>
+                <ip-modulo />
+              </algorithm>
+            </ecmp>
+          </entry>
+          <entry name="Tenant_A">
+            <routing-table>
+              <ip>
+                <static-route>
+                  <entry name="to TENANT_A_CLIENT">
+                    <destination>10.1.110.0/24</destination>
+                    <nexthop>
+                      <ip-address>10.1.10.2</ip-address>
+                    </nexthop>
+                    <metric>10</metric>
+                  </entry>
+                  <entry name="to TENANT_A_SERVER">
+                    <destination>10.1.111.0/24</destination>
+                    <nexthop>
+                      <ip-address>10.1.11.2</ip-address>
+                    </nexthop>
+                    <metric>10</metric>
+                  </entry>
+                </static-route>
+              </ip>
+            </routing-table>
+            <interface>
+              <member>ethernet1/1.10</member>
+              <member>ethernet1/1.11</member>
+            </interface>
+          </entry>
+        </virtual-router>
+        <lldp>
+          <enable>yes</enable>
+        </lldp>
+      </network>
+      <deviceconfig>
+        <system>
+          <type>
+            <static />
+          </type>
+          <update-server>updates.paloaltonetworks.com</update-server>
+          <update-schedule>
+            <threats>
+              <recurring>
+                <weekly>
+                  <day-of-week>wednesday</day-of-week>
+                  <at>01:02</at>
+                  <action>download-only</action>
+                </weekly>
+              </recurring>
+            </threats>
+          </update-schedule>
+          <timezone>US/Pacific</timezone>
+          <service>
+            <disable-telnet>yes</disable-telnet>
+            <disable-http>yes</disable-http>
+          </service>
+          <hostname>firewall-pod03</hostname>
+          <ip-address>10.73.254.101</ip-address>
+          <netmask>255.255.255.0</netmask>
+          <default-gateway>10.73.254.254</default-gateway>
+          <dns-setting>
+            <servers>
+              <primary>10.73.1.251</primary>
+            </servers>
+          </dns-setting>
+        </system>
+        <setting>
+          <config>
+            <rematch>yes</rematch>
+          </config>
+          <management>
+            <hostname-type-in-syslog>FQDN</hostname-type-in-syslog>
+          </management>
+          <auto-mac-detect>yes</auto-mac-detect>
+        </setting>
+      </deviceconfig>
+      <vsys>
+        <entry name="vsys1">
+          <application />
+          <application-group />
+          <zone>
+            <entry name="TENANT_A_CLIENT">
+              <network>
+                <layer3>
+                  <member>ethernet1/1.10</member>
+                </layer3>
+              </network>
+              <enable-user-identification>no</enable-user-identification>
+            </entry>
+            <entry name="TENANT_A_SERVER">
+              <network>
+                <layer3>
+                  <member>ethernet1/1.11</member>
+                </layer3>
+              </network>
+              <enable-user-identification>no</enable-user-identification>
+            </entry>
+          </zone>
+          <service />
+          <service-group />
+          <schedule />
+          <rulebase>
+            <security>
+              <rules>
+                <entry name="ICMP Permit">
+                  <from>
+                    <member>TENANT_A_CLIENT</member>
+                  </from>
+                  <to>
+                    <member>TENANT_A_SERVER</member>
+                  </to>
+                  <source>
+                    <member>PR01-CLIENT</member>
+                  </source>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <hip-profiles>
+                    <member>any</member>
+                  </hip-profiles>
+                  <destination>
+                    <member>PR01-SERVER</member>
+                  </destination>
+                  <application>
+                    <member>icmp</member>
+                    <member>ping</member>
+                  </application>
+                  <service>
+                    <member>application-default</member>
+                  </service>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <action>allow</action>
+                  <log-start>no</log-start>
+                  <log-end>yes</log-end>
+                  <description>Allow ICMP checks</description>
+                  <rule-type>interzone</rule-type>
+                  <negate-source>no</negate-source>
+                  <negate-destination>no</negate-destination>
+                  <disabled>no</disabled>
+                  <option>
+                    <disable-server-response-inspection>no</disable-server-response-inspection>
+                  </option>
+                </entry>
+                <entry name="HTTP Permit">
+                  <from>
+                    <member>TENANT_A_CLIENT</member>
+                  </from>
+                  <to>
+                    <member>TENANT_A_SERVER</member>
+                  </to>
+                  <source>
+                    <member>PR01-CLIENT</member>
+                  </source>
+                  <source-user>
+                    <member>any</member>
+                  </source-user>
+                  <hip-profiles>
+                    <member>any</member>
+                  </hip-profiles>
+                  <destination>
+                    <member>PR01-SERVER</member>
+                  </destination>
+                  <application>
+                    <member>any</member>
+                  </application>
+                  <service>
+                    <member>service-http</member>
+                  </service>
+                  <category>
+                    <member>any</member>
+                  </category>
+                  <action>allow</action>
+                  <log-start>no</log-start>
+                  <log-end>yes</log-end>
+                  <description>Allow HTTP traffic</description>
+                  <rule-type>interzone</rule-type>
+                  <negate-source>no</negate-source>
+                  <negate-destination>no</negate-destination>
+                  <disabled>no</disabled>
+                  <option>
+                    <disable-server-response-inspection>no</disable-server-response-inspection>
+                  </option>
+                </entry>
+              </rules>
+            </security>
+          </rulebase>
+          <import>
+            <network>
+              <interface>
+                <member>ethernet1/1</member>
+                <member>ethernet1/1.10</member>
+                <member>ethernet1/1.11</member>
+              </interface>
+            </network>
+          </import>
+          <address>
+            <entry name="PR01-CLIENT">
+              <ip-netmask>10.1.110.0/24</ip-netmask>
+              <description>PR01-CLIENT</description>
+            </entry>
+            <entry name="PR01-FW-INTERCO-CLIENT">
+              <ip-netmask>10.1.10.0/30</ip-netmask>
+              <description>PR01-FW-INTERCO-CLIENT</description>
+            </entry>
+            <entry name="PR01-SERVER">
+              <ip-netmask>10.1.111.0/24</ip-netmask>
+              <description>PR01-SERVER</description>
+            </entry>
+            <entry name="PR01-FW-INTERCO-SERVER">
+              <ip-netmask>10.1.11.0/30</ip-netmask>
+              <description>PR01-FW-INTERCO-SERVER</description>
+            </entry>
+          </address>
+          <profiles>
+            <custom-url-category>
+              <entry name="phpMyAdmin">
+                <list>
+                  <member>10.1.111.10/phpMyAdmin/*</member>
+                  <member>*/phpMyAdmin/*</member>
+                </list>
+              </entry>
+            </custom-url-category>
+            <url-filtering>
+              <entry name="Lab">
+                <credential-enforcement>
+                  <mode>
+                    <disabled />
+                  </mode>
+                  <log-severity>medium</log-severity>
+                  <block>
+                    <member>phpMyAdmin</member>
+                  </block>
+                </credential-enforcement>
+                <action>block</action>
+                <log-http-hdr-xff>yes</log-http-hdr-xff>
+                <log-http-hdr-user-agent>yes</log-http-hdr-user-agent>
+                <log-http-hdr-referer>yes</log-http-hdr-referer>
+                <block>
+                  <member>phpMyAdmin</member>
+                </block>
+              </entry>
+            </url-filtering>
+          </profiles>
+        </entry>
+      </vsys>
+    </entry>
+  </devices>
+</config>

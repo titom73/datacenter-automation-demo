@@ -40,33 +40,34 @@ datacenter:
                 switch08:
                   # ansible_port: 8008
                   ansible_host: 10.73.254.8
-
         l2leafs:
           vars:
             type: l2leaf
           children:
             rack01:
               hosts:
-                switch013:
+                switch13:
                   # ansible_port: 8003
                   ansible_host: 10.73.254.13
             rack02:
               hosts:
-                switch014:
+                switch14:
                   # ansible_port: 8003
                   ansible_host: 10.73.254.14
             rack03:
               hosts:
-                switch015:
+                switch15:
                   # ansible_port: 8003
                   ansible_host: 10.73.254.15
 
     fabric_services:
       children:
         l3leafs:
+        l2leafs:
     fabric_ports:
       children:
         l3leafs:
+        l2leafs:
 
 # group to run arista.avd.eos_validate_state
 eos:
