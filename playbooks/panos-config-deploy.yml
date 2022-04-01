@@ -128,8 +128,8 @@
       source_ip: '{{ item.source_ip }}'
       destination_zone: '{{ item.destination_zone}}'
       destination_ip: '{{ item.destination_ip }}'
-      application: '{{ item.application }}'
-      service: '{{ item.service | default(["application-default"]) }}'
+      application: '{{ item.application | default(["any"]) }}'
+      service: '{{ item.service | default(["any"]) }}'
       action: '{{ item.action }}'
     loop:
       '{{ security_policies }}'
