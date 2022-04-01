@@ -17,6 +17,25 @@
     vars:
       filename: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
 
+  - name: Create LLDP Profile
+    tags: [deploy]
+    paloaltonetworks.panos.panos_type_cmd:
+      provider: '{{ provider }}'
+      xpath: |
+        /config/devices/entry[@name="localhost.localdomain"]/network/profiles/lldp-profile
+      element: |
+          <entry name="standardlldp">
+            <option-tlvs>
+              <management-address>
+                <enabled>no</enabled>
+              </management-address>
+              <port-description>yes</port-description>
+              <system-name>yes</system-name>
+              <system-description>yes</system-description>
+              <system-capabilities>yes</system-capabilities>
+            </option-tlvs>
+          </entry>
+
   - name: 'Create Interface Management profile'
     tags: [deploy]
     paloaltonetworks.panos.panos_management_profile:
@@ -110,6 +129,7 @@
       destination_zone: '{{ item.destination_zone}}'
       destination_ip: '{{ item.destination_ip }}'
       application: '{{ item.application }}'
+      service: '{{ item.service | default(["application-default"]) }}'
       action: '{{ item.action }}'
     loop:
       '{{ security_policies }}'

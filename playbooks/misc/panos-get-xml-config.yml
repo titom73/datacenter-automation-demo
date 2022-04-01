@@ -1,0 +1,15 @@
+---
+- name: Collect Facts from devices
+  hosts: panos
+  connection: local
+  tasks:
+    - name: 'Get Config from {{ inventory_hostname }}'
+      paloaltonetworks.panos.panos_facts:
+        provider: '{{ provider }}'
+        gather_subset: ['config']
+      register: PANOS_CONFIG
+
+    - name: Save configuration to file
+      ansible.builtin.template:
+        src: '{{ inventory_dir }}/panos-running-config.xml.j2'
+        dest: "{{ inventory_dir }}/config_backup/{{ inventory_hostname }}_panos.xml"

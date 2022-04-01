@@ -24,6 +24,7 @@
       destination_zone: '{{ item.destination_zone}}'
       destination_ip: '{{ item.destination_ip }}'
       application: '{{ item.application }}'
+      service: '{{ item.service | default(["application-default"]) }}'
       action: '{{ item.action }}'
       state: '{{ state }}'
     loop:
@@ -73,6 +74,8 @@
       provider: '{{ provider }}'
       if_name: "{{ item.if_name }}"
       enable_dhcp: false
+      lldp_enabled: "{{ item.lldp_enabled | default(False) }}"
+      lldp_profile: "{{ item.lldp_profile | default('') }}"
       mode: "{{ item.mode }}"
       state: "{{ state | default('present') }}"
     loop:
