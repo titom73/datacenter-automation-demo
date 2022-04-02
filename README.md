@@ -56,6 +56,8 @@ As the goal of this repository is to detail how to extend data model, we won't g
 
 ## Available Playbooks
 
+All playbooks are saved under [`playbooks` folder](./playbooks/)
+
 ### Check devices connectivity
 
 - Collect facts as management connectivity checks
@@ -126,7 +128,7 @@ All the transformation from AVD data model to those used by Palo Alto modules ar
 
 ### Extend port definition:
 
-Nothing special to do here as we won't configure an aggrgated interface. We just have to use Firewall hostname in firewalls keys.
+Nothing special to do here as we won't configure an aggrgated interface. We just have to use [Firewall hostname](./dc1-inventory/group_vars/fabric_ports/firewalls.yml) in firewalls keys.
 
 ```yaml
 firewalls:
@@ -156,7 +158,7 @@ To generate sub-interfaces, we need to configure a bunch of things:
 - Security Zones == VRFs in AVD
 - Sub-interface information such as vlan tag and IP
 
-To do that, we need to configure a firewalls knob under VRF/SVI
+To do that, we need to configure a firewalls knob under [`VRF` / `SVI`](https://github.com/titom73/datacenter-automation-demo/blob/d7bf7b6e7b1b99020e8778df7d136d64942061f9/dc1-inventory/group_vars/fabric_services/services.yml#L35)
 
 ```yaml
 tenants:
@@ -216,7 +218,7 @@ Also same process is used to generate a list of security objects based on SVIs a
 
 ### Create security policies
 
-Here we just use model provided by [`paloaltonetworks.panos.panos_security_rule` module](https://ansible-pan.readthedocs.io/en/latest/modules/panos_security_rule_module.html).
+Here we just use model provided by [`paloaltonetworks.panos.panos_security_rule` module](https://ansible-pan.readthedocs.io/en/latest/modules/panos_security_rule_module.html). It is configured under [pannos group_vars](./dc1-inventory/group_vars/panos/security_policies.yml) but can be configured per device.
 
 ```yaml
 security_policies:
@@ -233,5 +235,5 @@ security_policies:
 
 ## License
 
-Project under [APACHE2 license](./LICENSE)
+Project published under [APACHE2 license](./LICENSE)
 
