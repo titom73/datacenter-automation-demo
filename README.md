@@ -36,6 +36,24 @@ Firewall connect both VRFs with following settings:
 
 __A full demo scrpit is available [here](./DEMO.md)__
 
+## Getting Started
+
+```bash
+# Install reauirements
+ansible-galaxy collection install requirements.yml
+
+# Check devices connectivity
+ansible-playbook playbooks/check-device-connectivity.yml --ask-vault-pass
+
+# Manage EVPN Fabric
+ansible-playbook playbooks/avd-build-and-deploy.yml --tags build,deploy --skip-tag debug --ask-vault-pass
+
+# Manage Security zone
+ansible-playbook-vault playbooks/panos-config-deploy.yml --tags build,deploy,policy --ask-vault-pass
+```
+
+As the goal of this repository is to detail how to extend data model, we won't go through AVD data model in detaul and it would be better to read [this repo example](https://github.com/titom73/ansible-avd-cloudvision-demo) or [AVD website](https://www.avd.sh).
+
 ## Available Playbooks
 
 ### Check devices connectivity
@@ -100,23 +118,7 @@ All devices are configured with a management IP address only and the following c
 | switch014 | 10.73.254.14/24|
 | switch015 | 10.73.254.15/24|
 
-## Build Initial network configuration
-
-```bash
-# Build configuration offline
-ansible-playbook playbooks/avd-build-and-deploy.yml --tags build --ask-vault-pass
-```
-
-Once configurations are generated, you can review them and validate it is generated accordingly
-
-```bash
-# Deploy configuration
-ansible-playbook playbooks/avd-build-and-deploy.yml --tags deploy --ask-vault-pass
-```
-
-As the goal of this repository is to detail how to extend data model, we won't go through AVD data model in detaul and it would be better to read [this repo example](https://github.com/titom73/ansible-avd-cloudvision-demo) or [AVD website](https://www.avd.sh).
-
-## Build Security part
+## How to build Security part from AVD datamodel
 
 In our example, we will build data to provision Palo Alto firewall from data coming from AVD data model. Of course, since this data model is not built for security devices, we will extend some sections.
 

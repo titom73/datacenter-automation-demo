@@ -29,6 +29,18 @@ Firewall connect both VRFs with following settings:
 - VRF: `Tenant_A` (configured as `virtual_router`)
 - Client security zone: `TENANT_A_CLIENT`
 - Server security zone: `TENANT_A_SERVER`
+
+## Install requirements
+
+From a clean ansible environment, use ansible-galaxy
+
+```bash
+# Install reauirements
+ansible-galaxy collection install requirements.yml
+```
+
+> Ansible can  be used from your package manager, Python installation or even in a docker instance. This repository assumes you have already installed Ansible with a version `>=2.11`
+
 ## Check initial state
 
 ### On Arista EOS devices
