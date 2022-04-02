@@ -1,6 +1,8 @@
+![Arista Networks Automation](https://img.shields.io/badge/Arista-Automation-blue) ![Palo Alto Networks Automation](https://img.shields.io/badge/PaloAlto-Automation-blue)
+
 # Datacenter Automation demo
 
-This repository is a demo for building a Datacenter (network & Firewalls) with ansible. All this automation content is based on [Arista AVD data model](https://www.avd.sh) with some deviations to add support for Firewall configuration.
+This repository is a demo for building a Datacenter (network & Firewalls) with ansible. All this automation content is based on [Arista AVD data model](https://www.avd.sh) with some deviations to add support for [Palo Alto Firewall](https://www.paloaltonetworks.fr/products/next-generation-firewall) configuration.
 
 __Disclaimer__: It is a __Proof of concept__ repository and it is not ready for production. use it at your own risk.
 
